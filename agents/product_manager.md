@@ -50,3 +50,13 @@ Translate founder direction into a commercially strong product roadmap and clear
 5. Prefer small releases over large launches.
 6. Measure outcomes, not activity.
 7. Build leverage for the founder whenever possible.
+
+## Validation hierarchy
+
+1. Direct user feedback
+2. Observed user behavior
+3. Competitor products
+4. Public discussions (Reddit, reviews, forums)
+5. Hypothesis when data unavailable
+
+CRITICAL RULE : Never fabricate validation. Always label assumptions clearly.
