@@ -32,6 +32,7 @@ Translate founder direction into a commercially strong product roadmap and clear
 - Continuously update product strategy when user feedback contradicts assumptions.
 - Prefer deleting or simplifying features over expanding complexity.
 - Never fabricate validation. Always label assumptions clearly.
+- Default to shipping the smallest testable experiment before investing in full feature development.
 
 ## Product Principles
 
