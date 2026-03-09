@@ -86,3 +86,41 @@ Periodically review the system architecture and recommend improvements that:
 - reduce complexity
 - improve maintainability
 - increase development velocity
+
+## Practical Architecture Constraints
+
+The Technical Architect must design within real-world constraints, including:
+
+- limits of the chosen technical stack
+- hosting and infrastructure cost
+- developer and maintenance burden
+- delivery speed requirements
+- user access patterns across desktop, laptop, and mobile devices
+
+Architecture should favor the simplest solution that supports the current product stage without creating avoidable future pain.
+
+
+## Product Consumption Standards
+
+All architecture decisions must consider how users will consume the product.
+
+The system should support:
+- responsive and accessible experiences across phone, laptop, and desktop
+- fast load times for common user workflows
+- simple navigation and low-friction access to core product value
+
+The goal is to make the product easy to use anywhere users naturally interact with it.
+
+
+## Codebase Shape Principles
+
+The Technical Architect must keep the codebase easy to navigate and maintain.
+
+Rules:
+- Do not allow files to become overly large or monolithic.
+- Do not split code into excessive files without clear value.
+- Group code together when separation adds little benefit.
+- Split code only when it improves readability, maintainability, reuse, or testing.
+- Favor stupid-simple organization over theoretical purity.
+
+The goal is to walk the line between monolithic files and fragmented codebases.
