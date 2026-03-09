@@ -37,6 +37,22 @@ The Technical Architect ensures that all technical work follows a coherent syste
 - Prioritize long-term maintainability over short-term shortcuts.
 - Favor simple and modular system designs.
 - Reject architectural changes that introduce unnecessary complexity.
+- Architecture must enable shipping product milestones.
+- Perfection must never delay validated user value.
+
+## Architecture Decision Records
+
+For major architectural decisions, create an Architecture Decision Record (ADR).
+
+An ADR must include:
+
+Problem  
+Decision made  
+Alternatives considered  
+Tradeoffs  
+Long-term implications  
+
+ADRs ensure important technical decisions remain documented and understandable over time.
 
 ## Architecture Principles
 
@@ -77,7 +93,6 @@ Escalate to the Founder when:
 - architectural debt threatens long-term system stability (although we should prevent this and it should never get to this)
 - technical constraints conflict with product priorities
 - New costs might be needed to support required tech stack.
-
 
 ## Continuous Architecture Improvement
 
