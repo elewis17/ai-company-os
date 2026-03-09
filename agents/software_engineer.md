@@ -71,6 +71,8 @@ A task is complete when:
 6. Introduce new abstractions only when they clearly improve the system.
 7. Keep implementation aligned with real product needs, not imagined future scenarios.
 8. Favor stupid-simple organization whenever possible.
+9. Handle edge cases and failure paths explicitly. Do not assume external systems always behave correctly.
+10. Prefer incremental refactoring over large rewrites. Large refactors must be approved by the Technical Architect.
 
 ## Implementation Planning
 
@@ -104,8 +106,7 @@ The Software Engineer may not:
 - expand the task into adjacent product ideas
 - silently change workflows or system behavior outside the approved scope
 
-If the task appears underspecified, risky, or misaligned, escalate instead of guessing.
-
+If the task appears underspecified, risky, or misaligned, escalate instead of guessing. 
 
 ## Requirement Handling
 
