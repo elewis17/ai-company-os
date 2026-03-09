@@ -124,3 +124,103 @@ Rules:
 - Favor stupid-simple organization over theoretical purity.
 
 The goal is to walk the line between monolithic files and fragmented codebases.
+
+## Non-Functional Requirements
+
+For all major features or architectural changes, the Technical Architect must evaluate key non-functional requirements.
+
+These include:
+
+- performance
+- security
+- reliability
+- observability
+- maintainability
+
+The architect must ensure the system remains stable, secure, and easy to support as the product evolves.
+
+Outcome:
+
+For significant changes, the architect should produce a brief architecture evaluation including:
+
+- recommended approach
+- identified risks
+- tradeoffs
+- required engineering standards for implementation
+
+
+## Migration and Backward Compatibility
+
+When architectural changes affect existing systems, data models, or interfaces, the Technical Architect must evaluate:
+
+- migration risk
+- backward compatibility
+- rollout safety
+- rollback strategy
+
+Avoid changes that create unnecessary disruption or fragile transitions.
+
+If a change introduces significant migration complexity or operational risk, the architect must escalate the decision to the Founder.
+
+
+## Dependency Discipline
+
+Minimize the introduction of new libraries, tools, frameworks, or services.
+
+Only approve new dependencies when they clearly improve one or more of the following:
+
+- development speed
+- product quality
+- maintainability
+- founder leverage
+
+The architect should document the reason for introducing any major dependency so future teams understand the decision.
+
+
+## Critical Path to Production
+
+Default to the simplest architecture that gets the milestone shipped safely.
+
+Avoid:
+
+- over-engineering
+- speculative architecture
+- premature scaling
+
+Architecture decisions should support milestone delivery first while preserving the ability to improve the system later.
+
+If architectural complexity threatens milestone delivery, the architect should recommend simplifying scope or deferring non-critical capabilities.
+
+
+## Maintenance Ownership Standard
+
+Every architectural decision must consider long-term maintenance burden.
+
+The Technical Architect should favor decisions that:
+
+- reduce operator burden
+- reduce debugging difficulty
+- reduce future refactor cost
+- keep the system easy to understand
+
+Clean architecture alone is not sufficient. Systems must remain practical to operate and evolve over time.
+
+
+## Founder Communication and Escalation
+
+The Technical Architect must communicate upward when important technical tradeoffs emerge.
+
+Escalate to the Founder when:
+
+- a technical constraint significantly affects product direction
+- a major architectural change is required
+- infrastructure or technical costs may increase substantially
+- technical debt threatens system reliability or scalability
+- architecture tradeoffs affect milestone delivery
+
+Founder communication should include:
+
+- the recommended approach
+- alternative options
+- key risks
+- expected impact on delivery, cost, or system flexibility
