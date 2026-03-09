@@ -59,55 +59,27 @@ CRITICAL RULE : Never fabricate validation. Always label assumptions clearly.
 
 When evaluating features, ideas, or roadmap priorities, score opportunities using the following criteria:
 
-Impact :
-How strongly the feature could drive user adoption or meaningful user value.
+1. Impact: How strongly the feature could drive user adoption or meaningful user value.
+2. Viability: Whether the solution is technically achievable within current constraints.
+3. Purpose Alignment: How well the work aligns with the product mission of explosive user growth and founder leverage.
+4. Confidence: Strength of validation signals supporting the idea.
 
-Viability:
-Whether the solution is technically achievable within current constraints.
-
-Purpose Alignment:
-How well the work aligns with the product mission of explosive user growth and founder leverage.
-
-Confidence:
-Strength of validation signals supporting the idea.
-
-Prefer fast experimentation over prolonged analysis.
-
+Note: We Prefer fast experimentation over prolonged analysis!
 
 ## PRD Template
 
-All Product Requirement Documents must follow this structure.
+All Product Requirement Documents must follow this structure:
+1. Problem: Clear description of the user problem.
+2. User: Who specifically experiences this problem.
+3. Why It Matters: Why solving this problem is important for user adoption or product growth.
+4. Proposed Solution: High level description of the feature or system behavior.
 
-Problem
-Clear description of the user problem.
-
-User
-Who specifically experiences this problem.
-
-Why It Matters
-Why solving this problem is important for user adoption or product growth.
-
-Proposed Solution
-High level description of the feature or system behavior.
-
-Success Metric
-How success will be measured (user adoption, engagement, etc).
-
-Scope
-What will be included in this feature.
-
-Out of Scope
-What is intentionally excluded to avoid scope creep.
-
-Risks
-Potential issues or unknowns.
-
-Acceptance Criteria
-Clear conditions that must be met for the feature to be considered complete.
-
-Validation Evidence
-Evidence supporting the problem or opportunity.
-
+Success Metric - How success will be measured (user adoption, engagement, etc):
+1. Scope: What will be included in this feature.
+2. Out of Scope: What is intentionally excluded to avoid scope creep.
+3. Risks: Potential issues or unknowns.
+4. Acceptance Criteria: Clear conditions that must be met for the feature to be considered complete.
+5. Validation Evidence: Evidence supporting the problem or opportunity.
 
 ## Idea Validation
 
@@ -119,10 +91,7 @@ Before recommending features, attempt validation through:
 4. Public discussions (Reddit, forums, reviews)
 5. Hypothesis when data is unavailable
 
-Never fabricate validation data.
-
-If evidence is weak or unavailable, clearly label assumptions.
-
+Never fabricate validation data. If evidence is weak or unavailable, clearly label assumptions.
 
 ## Market Sizing (Optional)
 
@@ -141,10 +110,10 @@ Milestones represent meaningful validation stages for the product.
 
 Each milestone must include:
 
-Milestone Name  
-Goal  
-Success Metric  
-Key Capabilities Required  
+1. Milestone Name  
+2. Goal  
+3. Success Metric  
+4. Key Capabilities Required  
 
 Milestones should prioritize rapid learning and early user adoption.
 
@@ -152,7 +121,7 @@ Milestones should prioritize rapid learning and early user adoption.
 
 After each milestone release:
 
-Review user adoption metrics.
-Compare results to success metrics defined in the PRD.
-Update backlog priorities based on evidence.
-Retire or revise low-impact features quickly.
+1. Review user adoption metrics.
+2. Compare results to success metrics defined in the PRD.
+3. Update backlog priorities based on evidence.
+4. Retire or revise low-impact features quickly.
