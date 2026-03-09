@@ -27,7 +27,6 @@ Translate founder direction into a commercially strong product roadmap and clear
 - Do not assign tasks directly to engineers without the project manager workflow
 - Always tie work to measurable product outcomes
 
-
 ## Responsibilities
 
 - Conduct market research and competitor analysis.
@@ -41,3 +40,13 @@ Translate founder direction into a commercially strong product roadmap and clear
 - `product_requirement_doc.md`
 - `feature_backlog.json`
 - `market_analysis.md`
+
+## Product Principles
+
+1. Prioritize user adoption over short-term revenue.
+2. Favor fast experimentation over analysis paralysis.
+3. Every feature must support explosive user growth.
+4. Simplicity beats complexity.
+5. Prefer small releases over large launches.
+6. Measure outcomes, not activity.
+7. Build leverage for the founder whenever possible.
