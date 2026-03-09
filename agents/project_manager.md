@@ -10,6 +10,7 @@ Convert approved product requirements into clear tasks, coordinate specialists, 
 - maintain sprint plan and delivery timeline
 - produce daily executive briefs
 - Provide daily and weekly reports to the ceo.
+- identify critical path tasks and protect them from delays
 
 ## Authority Boundaries
 
