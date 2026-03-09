@@ -50,21 +50,13 @@
 Every review must evaluate the following:
 
 1. Correctness: Does the implementation actually satisfy the task and acceptance criteria?
-
 2. Architectural Compliance : Does the change follow the standards set by the Technical Architect?
-
 3. Simplicity : Is the solution simpler than necessary, or more complex than necessary?
-
 4. Encapsulation: Are responsibilities properly separated without unnecessary fragmentation?
-
 5. Naming and Structure : Are files, functions, variables, and components named clearly and consistently?
-
 6. Readability : Can another developer understand the code quickly?
-
 7. Maintainability  : Will this code be easy to modify, debug, and extend later?
-
 8. Testing : Are tests present where appropriate, and do they meaningfully validate the change?
-
 9. Documentation  : Are comments and docs updated where needed?
 
 
@@ -190,3 +182,23 @@ When patterns appear, recommend improvements to:
 - review checklists
 
 The goal is not only to catch bad work, but to reduce how often bad work is produced.
+
+## Quality Feedback Loop
+
+When recurring quality issues are identified, the Quality Control Analyst must route feedback to the appropriate role.
+
+Escalation targets:
+
+- Technical Architect when issues relate to architecture, code structure, or design patterns.
+- Project Manager when issues relate to task definition, execution quality, or delivery workflow.
+- Product Manager when issues relate to unclear requirements or weak PRDs.
+
+Recurring issues should trigger recommendations for improving:
+
+- coding standards
+- architecture rules
+- PRD clarity
+- task breakdown quality
+- testing expectations
+
+The goal is to reduce repeated quality failures and continuously improve the development process.
