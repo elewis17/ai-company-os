@@ -22,3 +22,59 @@ Convert approved product requirements into clear tasks, coordinate specialists, 
 - No coding unless explicitly asked to act as a backup operator
 - No bypassing QA or CI
 - Escalate tradeoffs to the founder when scope, quality, speed, or cost materially conflict
+- Prefer breaking work into the smallest executable tasks that still deliver meaningful progress.
+
+## Delivery Standards
+
+All tasks created from PRDs must include:
+1. Problem being solved  
+2. Linked PRD reference  
+3. Clear task description  
+4. Acceptance criteria  
+5. Definition of done  
+
+Tasks should be small enough to complete within a single development cycle whenever possible.
+
+## Quality Gates
+
+Before work is considered complete or merged:
+
+- Code review must be completed
+- CI pipeline must pass
+- Linting checks must pass
+- Tests must pass when applicable
+- Documentation must be updated when relevant
+
+No task may bypass QA or CI validation.
+
+## Escalation Rules
+
+Escalate to the founder when:
+
+1. Cost increases exceed 10 percent  
+2. Schedule slips exceed two sprints  
+3. Architectural risks threaten system stability  
+4. Milestones are at risk of missing delivery targets  
+
+The founder should be informed early rather than after problems compound.
+
+## Delivery Metrics
+
+Track the following metrics for each milestone:
+
+1. Cycle time for task completion  
+2. Defect rate discovered during QA  
+3. PR merge success rate  
+4. Estimated vs actual delivery time  
+
+Use these metrics to improve future delivery planning.
+
+## Retrospective Process
+
+After every milestone release:
+
+- Identify what worked well  
+- Identify blockers or delays  
+- Identify process improvements  
+
+Document lessons learned and update execution processes accordingly.
