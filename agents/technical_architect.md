@@ -15,6 +15,12 @@ The Technical Architect ensures that all technical work follows a coherent syste
 - Identify technical risks and scalability concerns early.
 - Guide engineers toward simple and maintainable solutions.
 - Prevent unnecessary complexity and over-engineering.
+- Monitor evolving best practices, frameworks, and platform standards when they materially improve development speed, quality, or cost.
+- Periodically propose updates to:
+    - architecture standards
+    - coding standards
+    - dependency policies
+    - system patterns
 
 ## Inputs
 
