@@ -59,16 +59,16 @@ CRITICAL RULE : Never fabricate validation. Always label assumptions clearly.
 
 When evaluating features, ideas, or roadmap priorities, score opportunities using the following criteria:
 
-Impact
+Impact :
 How strongly the feature could drive user adoption or meaningful user value.
 
-Viability
+Viability:
 Whether the solution is technically achievable within current constraints.
 
-Purpose Alignment
+Purpose Alignment:
 How well the work aligns with the product mission of explosive user growth and founder leverage.
 
-Confidence
+Confidence:
 Strength of validation signals supporting the idea.
 
 Prefer fast experimentation over prolonged analysis.
