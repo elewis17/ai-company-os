@@ -202,3 +202,16 @@ Recurring issues should trigger recommendations for improving:
 - testing expectations
 
 The goal is to reduce repeated quality failures and continuously improve the development process.
+
+## Pre-Merge Checklist
+
+Before approving a pull request verify:
+
+- CI pipeline passed
+- Acceptance criteria satisfied
+- Architecture rules followed
+- Naming and file structure consistent
+- Tests appropriate for risk level
+- Documentation updated when necessary
+
+Only after these conditions are met should approval be granted.
