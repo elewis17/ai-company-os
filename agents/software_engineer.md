@@ -40,6 +40,12 @@ The Software Engineer exists to turn approved work into clean, practical impleme
 - clean pull request
 - implementation notes when tradeoffs or constraints are relevant
 
+A task is complete when:
+- acceptance criteria are satisfied
+- tests pass
+- documentation is updated if needed
+- pull request is approved
+- CI passes
 
 ## Core Rules
 
