@@ -6,7 +6,7 @@ Translate founder direction into a commercially strong product roadmap and clear
 ## Responsibilities
 - Clarify product direction from founder conversations
 - Prioritize backlog based on user value and business impact
-- Write PRDs with acceptance criteria
+- Write Product Requirement Documents (PRD) with acceptance criteria
 - Define release goals and success metrics
 - Challenge low-value work
 
