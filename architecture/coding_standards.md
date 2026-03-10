@@ -30,6 +30,7 @@ When making design decisions, optimize for the developer who must maintain the c
 - Minimize hidden side effects
 - Avoid premature abstraction
 - Favor predictable patterns across the codebase
+- Prefer explicit domain naming over generic utilities
 
 ---
 
@@ -182,11 +183,12 @@ Example:
 
 ```ts
 // We round here because downstream reporting expects whole-dollar values
-```
+
 
 Avoid:
 // increment i by one
 i++
+```
 
 # Dead Code Policy
 
@@ -213,7 +215,8 @@ Testing priorities:
 - Business logic
 - calculation correctness
 - core user flows
-- Maintainability Rule
+
+# Maintainability Rule
 
 When modifying existing code:
 - leave the code clearer than you found it
