@@ -373,4 +373,11 @@ Each stage of this workflow must follow the standard defined in:
 
 workflows/handoff_standard.md
 
-No stage is considered complete until the next owner and required action are explicitly defined
+A stage is not considered complete until a valid handoff exists containing:
+
+- status
+- completed work
+- artifacts updated
+- next owner
+- next required action
+- blockers or risks
