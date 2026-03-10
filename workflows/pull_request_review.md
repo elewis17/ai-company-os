@@ -243,16 +243,7 @@ Merge approved.
 ---
 ---
 
-## 9. Handoff Requirement
-
-Each stage of this workflow must follow the standard defined in:
-
-workflows/handoff_standard.md
-
-No stage is considered complete until the next owner and required action are explicitly defined.
-
-
-## 10. Merge and Closeout
+## 9. Merge and Closeout
 
 **Owner:** Project Manager
 
@@ -291,6 +282,14 @@ If documentation missing → Project Manager
 If final approval fails → return to relevant upstream owner
 
 ---
+
+# Handoff Requirement
+
+Each stage of this workflow must follow the standard defined in:
+
+workflows/handoff_standard.md
+
+No stage is considered complete until the next owner and required action are explicitly defined.
 
 # Summary
 
