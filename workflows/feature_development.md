@@ -316,17 +316,7 @@ Release notes are created if applicable.
 
 ---
 
-## 12. Handoff Requirement
-
-Each stage of this workflow must follow the standard defined in:
-
-workflows/handoff_standard.md
-
-No stage is considered complete until the next owner and required action are explicitly defined.
-
----
-
-## 13. Merge and Closeout
+## 12. Merge and Closeout
 
 **Owner:** Project Manager
 
@@ -372,6 +362,15 @@ Next Owner: Software Engineer
 
 Blocked Task:
 Billing API integration
+
+
+# Handoff Requirement
+
+Each stage of this workflow must follow the standard defined in:
+
+workflows/handoff_standard.md
+
+No stage is considered complete until the next owner and required action are explicitly defined.
 
 Bottleneck Agent:
 Software Engineer
