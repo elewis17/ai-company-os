@@ -324,9 +324,6 @@ workflows/handoff_standard.md
 
 No stage is considered complete until the next owner and required action are explicitly defined.
 
-Resolution Plan:
-Technical Architect defining API contract
-
 ---
 
 ## 13. Merge and Closeout
