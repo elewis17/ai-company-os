@@ -195,31 +195,55 @@ Documentation accurately reflects the implemented behavior.
 
 ---
 
-## 7. Final Approval
+## 7. Founder Preview Review
+
+**Owner:** Project Manager  
+**Next Owner:** Founder
+
+Before final approval, the Project Manager provides the Founder with:
+
+- pull request link
+- preview link or clear local preview instructions
+- short summary of the feature
+- expected behaviors to verify
+- confirmation that architecture review, QA review, and CI checks have passed
+
+The Founder reviews the feature as a product experience, not as a code reviewer.
+
+The Founder validates:
+
+- feature behavior matches the PRD
+- user-visible behavior is acceptable
+- the feature is ready to ship
+
+**Exit Criteria**
+
+Founder has enough visibility to make a product approval decision.
+
+## 8. Final Approval
 
 **Owner:** Founder  
 **Next Owner:** Project Manager
 
-The Founder reviews the PR for:
+The Founder reviews the feature preview and confirms:
 
-- scope alignment
-- architectural safety
-- overall quality
-- readiness for merge
+- delivered behavior matches approved scope
+- the feature is acceptable for release
+- no visible issues block shipment
 
 Possible outcomes:
 
 - approve
 - request changes
-- reject due to architectural or quality violations
+- reject due to product readiness concerns
 
 **Exit Criteria**
 
 Merge approved.
-
+---
 ---
 
-## 8. Merge and Closeout
+## 9. Merge and Closeout
 
 **Owner:** Project Manager
 
@@ -257,53 +281,6 @@ If CI failure → Software Engineer
 If documentation missing → Project Manager  
 If final approval fails → return to relevant upstream owner
 
----
-
-#. Founder Preview Review
-
-**Owner:** Project Manager  
-**Next Owner:** Founder
-
-Before final approval, the Project Manager provides the Founder with:
-
-- pull request link
-- preview link or clear local preview instructions
-- short summary of the feature
-- expected behaviors to verify
-- confirmation that architecture review, QA review, and CI checks have passed
-
-The Founder reviews the feature as a product experience, not as a code reviewer.
-
-The Founder validates:
-
-- feature behavior matches the PRD
-- user-visible behavior is acceptable
-- the feature is ready to ship
-
-**Exit Criteria**
-
-Founder has enough visibility to make a product approval decision.
-
-## 7. Final Approval
-
-**Owner:** Founder  
-**Next Owner:** Project Manager
-
-The Founder reviews the feature preview and confirms:
-
-- delivered behavior matches approved scope
-- the feature is acceptable for release
-- no visible issues block shipment
-
-Possible outcomes:
-
-- approve
-- request changes
-- reject due to product readiness concerns
-
-**Exit Criteria**
-
-Merge approved.
 ---
 
 # Summary
