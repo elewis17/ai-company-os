@@ -259,22 +259,51 @@ If final approval fails → return to relevant upstream owner
 
 ---
 
-# Founder Visibility
+#. Founder Preview Review
 
-The Founder can request the following status from the Project Manager at any time:
+**Owner:** Project Manager  
+**Next Owner:** Founder
 
-Pull Request Status
+Before final approval, the Project Manager provides the Founder with:
 
-PR Stage: Architecture Review  
+- pull request link
+- preview link or clear local preview instructions
+- short summary of the feature
+- expected behaviors to verify
+- confirmation that architecture review, QA review, and CI checks have passed
 
-Next Owner: Technical Architect  
+The Founder reviews the feature as a product experience, not as a code reviewer.
 
-Issue Detected:
-Business logic incorrectly placed in UI component
+The Founder validates:
 
-Resolution Plan:
-Software Engineer refactoring service layer
+- feature behavior matches the PRD
+- user-visible behavior is acceptable
+- the feature is ready to ship
 
+**Exit Criteria**
+
+Founder has enough visibility to make a product approval decision.
+
+## 7. Final Approval
+
+**Owner:** Founder  
+**Next Owner:** Project Manager
+
+The Founder reviews the feature preview and confirms:
+
+- delivered behavior matches approved scope
+- the feature is acceptable for release
+- no visible issues block shipment
+
+Possible outcomes:
+
+- approve
+- request changes
+- reject due to product readiness concerns
+
+**Exit Criteria**
+
+Merge approved.
 ---
 
 # Summary
