@@ -66,3 +66,46 @@ Any issues that may prevent progress.
 ---
 
 # Handoff Template
+
+Handoff
+
+Completed By:
+<Role>
+
+Status:
+ready for next stage | blocked | requires revision
+
+Completed Work
+- ...
+
+Artifacts Updated
+- ...
+
+Decision or Outcome
+- ...
+
+Next Owner
+- ...
+
+Next Required Action
+- ...
+
+Blockers or Risks
+- ...
+
+---
+
+# Workflow Rule
+
+A workflow stage may not begin until the previous stage has produced a valid handoff.
+
+The handoff must clearly identify:
+
+- the current status
+- work completed
+- artifacts updated
+- the next owner
+- the next required action
+- blockers or risks
+
+Workflows that reference this standard must enforce this rule.
