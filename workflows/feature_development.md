@@ -25,6 +25,7 @@ The **Project Manager acts as the orchestration layer** for this workflow and ma
 5. Scope expansion requires explicit approval.
 6. The Project Manager tracks progress and identifies bottlenecks.
 7. The Founder can request a feature status update from the Project Manager at any time.
+8. Handoff Requirement is crucial and required to keep every future workflow informed
 
 ---
 
@@ -315,7 +316,20 @@ Release notes are created if applicable.
 
 ---
 
-## 12. Merge and Closeout
+## 12. Handoff Requirement
+
+Each stage of this workflow must follow the standard defined in:
+
+workflows/handoff_standard.md
+
+No stage is considered complete until the next owner and required action are explicitly defined.
+
+Resolution Plan:
+Technical Architect defining API contract
+
+---
+
+## 13. Merge and Closeout
 
 **Owner:** Project Manager
 
@@ -364,6 +378,3 @@ Billing API integration
 
 Bottleneck Agent:
 Software Engineer
-
-Resolution Plan:
-Technical Architect defining API contract
