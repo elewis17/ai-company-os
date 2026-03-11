@@ -40,7 +40,6 @@ The repository should feel organized, predictable, and easy to navigate without 
 
 A typical repository should be organized like this:
 
-```text
 src/
 public/
 supabase/
@@ -54,18 +53,245 @@ schemas/
 reports/
 docs/
 
-tests/               (optional, if not colocated)
-scripts/             (optional)
-```
-This structure is intended to balance:
+tests/        (optional)
+scripts/      (optional)
 
-discoverability
+Not every project will require every folder, but the naming and intent should remain consistent.
 
-separation of concerns
+---
 
-pragmatic cohesion
+# Top-Level Folder Responsibilities
+
+## src/
+
+Contains application source code.
+
+This is where product logic, UI, domain logic, and internal utilities live.
+
+---
+
+## public/
+
+Contains static assets served directly by the frontend application.
+
+Examples:
+
+- images
+- icons
+- public metadata
+- favicon files
+- robots.txt
+
+No application logic should be placed here.
+
+---
+
+## supabase/
+
+Contains Supabase backend infrastructure.
+
+Examples:
+
+- migrations
+- SQL schema
+- RLS policies
+- edge functions
+- Supabase configuration
+
+This folder represents the data infrastructure layer of the system.
+
+---
+
+## architecture/
+
+Contains architectural standards and technical rules.
+
+Examples:
+
+- system_architecture.md
+- repo_structure.md
+- coding_standards.md
+- security_principles.md
+
+These files define how systems should be built and maintained.
+
+---
+
+## company/
+
+Contains company-level strategy and organizational direction.
+
+Examples:
+
+- company vision
+- product strategy
+- internal principles
+
+This folder explains why the organization builds what it builds.
+
+---
+
+## agents/
+
+Contains agent role definitions and operational boundaries.
+
+Examples:
+
+- agent responsibilities
+- capability definitions
+- execution constraints
+- agent instructions
+
+Agents should be able to read this folder to understand their responsibilities within the operating system.
+
+---
+
+## workflows/
+
+Contains execution workflows and operational processes.
+
+Examples:
+
+- sprint planning
+- feature development
+- pull request review
+- release management
+- incident response
+- operational metrics
+
+This folder defines how work moves through the organization.
+
+---
+
+## templates/
+
+Contains reusable templates for structured documents.
+
+Examples:
+
+- PRD templates
+- task briefs
+- architecture decision records
+- report templates
+
+Templates support consistent execution across the system.
+
+---
+
+## schemas/
+
+Contains machine-readable schemas used for structured inputs or outputs.
+
+Examples:
+
+- task schemas
+- workflow payload schemas
+- reporting schemas
+
+Schemas help standardize structured communication for both humans and agents.
+
+---
+
+## reports/
+
+Contains generated or periodic reports.
+
+Examples:
+
+- weekly reports
+- executive summaries
+- operational metrics reports
+- incident reports
+
+Reports represent outputs rather than governing rules.
+
+---
+
+## docs/
+
+Contains supporting documentation not tied directly to architecture or workflows.
+
+Examples:
+
+- onboarding documentation
+- product reference material
+- implementation notes
+
+This folder should not become a dumping ground for unrelated files.
+
+---
+
+## tests/
+
+Optional folder for cross-feature or integration tests when they are not colocated.
+
+Examples:
+
+- integration tests
+- end-to-end tests
+- system-level tests
+
+---
+
+## scripts/
+
+Optional folder for repository automation scripts.
+
+Examples:
+
+- setup scripts
+- development utilities
+- migration helpers
+- reporting tools
+
+Scripts should support operations but not replace architecture or domain logic.
+
+---
+
+# Source Code Structure
+
+Inside `src/`, code should follow a predictable internal structure.
+
+Recommended layout:
+
+src/
+  assets/
+  components/
+  features/
+  hooks/
+  services/
+  domain/
+  integrations/
+  context/
+  lib/
+  pages/
+  styles/
+  types/
+
+This structure balances:
+
+- discoverability
+- separation of concerns
+- pragmatic cohesion
+
+---
 
 # src/ Folder Responsibilities
+
+## assets/
+
+Contains static assets used by the application.
+
+Examples:
+
+- images
+- icons
+- fonts
+- visual resources used by the UI
+
+Assets should not contain application logic.
+
+---
 
 ## components/
 
@@ -99,9 +325,9 @@ A feature folder may include:
 - tests
 - local helpers
 
-Use features/ when a feature has enough surface area to justify keeping related pieces together.
+Use features/ when a feature has enough surface area to justify grouping related pieces together.
 
-Example structure:
+Example:
 
 src/features/deal-analysis/
   components/
@@ -113,7 +339,7 @@ src/features/deal-analysis/
 Rules:
 
 - feature folders should remain bounded and understandable
-- do not duplicate shared primitives already defined elsewhere
+- avoid duplicating shared primitives already defined elsewhere
 - feature folders may compose pieces from components/, hooks/, services/, domain/, and types/
 
 ---
@@ -125,14 +351,14 @@ Contains reusable application or UI behavior.
 Examples:
 
 - data loading hooks
-- reusable stateful UI logic
+- reusable state logic
 - interaction flow hooks
 
 Rules:
 
-- hooks should not become a dumping ground for all logic
+- hooks should not become a dumping ground
 - reusable hooks belong here
-- feature-specific hooks may live inside the feature folder when they are tightly scoped
+- feature-specific hooks may remain inside feature folders when tightly scoped
 
 ---
 
@@ -143,15 +369,14 @@ Contains service-layer logic and external orchestration.
 Examples:
 
 - API integration
-- Supabase interaction wrappers
+- Supabase service wrappers
+- backend interaction utilities
 - external service clients
-- backend orchestration helpers
 
 Rules:
 
 - services should not contain presentation logic
-- services may coordinate external systems
-- services should remain testable and explicit
+- services should remain explicit and testable
 
 ---
 
@@ -161,52 +386,75 @@ Contains business rules and domain logic.
 
 Examples:
 
-- calculations
-- scoring logic
-- transformations
-- core product rules
-- financial modeling rules
+- financial calculations
+- scoring models
+- transformation logic
+- product rules
 
 Rules:
 
-- domain logic must remain independent from UI concerns
+- domain logic must remain independent of UI concerns
 - domain modules should be reusable and testable
-- if the logic expresses business meaning, it likely belongs here instead of lib/
+
+---
+
+## integrations/
+
+Contains integration adapters for external systems.
+
+Examples:
+
+- Supabase integration
+- third-party APIs
+- analytics providers
+- external data services
+
+Integrations isolate external dependencies from the rest of the system.
+
+---
+
+## context/
+
+Contains React context providers and global state containers.
+
+Examples:
+
+- authentication context
+- application state context
+- shared runtime state
+
+Context should be used carefully to avoid hidden coupling.
 
 ---
 
 ## lib/
 
-Contains shared low-level helpers and internal utilities.
+Contains shared low-level utilities.
 
 Examples:
 
 - formatting helpers
 - parsing utilities
-- generic utility wrappers
-- shared technical helpers
+- generic helpers
 
 Rules:
 
 - lib/ should remain generic
-- do not place business logic here
-- do not allow lib/ to become a vague miscellaneous dumping ground
+- business logic should not live here
 
-If something has domain meaning, move it to domain/ or services/.
+If logic expresses domain meaning, move it to domain/.
 
 ---
 
 ## pages/
 
-Contains route-level page components or screens.
+Contains route-level pages or application screens.
 
 Rules:
 
-- pages should compose behavior rather than contain heavy business logic
-- pages should coordinate components, hooks, and feature modules
+- pages should orchestrate components and hooks
+- pages should not contain heavy business logic
 - pages should remain easy to scan
-
-For routing-based applications, this is where top-level user-facing screens live.
 
 ---
 
@@ -218,8 +466,7 @@ Examples:
 
 - global CSS
 - design tokens
-- shared style configuration
-- theme-level styling assets
+- theme configuration
 
 ---
 
@@ -230,14 +477,10 @@ Contains shared type definitions.
 Examples:
 
 - domain models
+- API payload shapes
 - shared interfaces
-- API contract types
-- common payload shapes
 
-Rules:
-
-- keep shared types here when they are used broadly
-- feature-local types may remain inside a feature folder when tightly scoped
+Feature-specific types may remain within feature folders when appropriate.
 
 ---
 
@@ -251,9 +494,9 @@ Examples:
 
 - shared UI primitives → components/
 - shared business rules → domain/
-- shared low-level helpers → lib/
+- shared helpers → lib/
 
-Do not place broadly reused code inside random feature folders.
+Avoid placing broadly reused code inside random feature folders.
 
 ---
 
@@ -263,147 +506,130 @@ Business logic belongs in:
 
 - domain/
 - services/
-- application hooks when appropriate
+- hooks when appropriate
 
-Pages and components should primarily compose behavior, not define core rules.
+Pages and components should compose behavior, not define core rules.
 
 ---
 
-## Rule 3: Feature folders are allowed, but they must stay bounded
+## Rule 3: Feature folders must stay bounded
 
-Feature folders are useful when they improve discoverability.
+Feature folders improve discoverability but must remain understandable.
 
-They should not become mini-monoliths with unclear internal structure.
-
-Use them when they help answer:
+They should help answer:
 
 - what belongs to this feature
-- what is shared vs local
-- where a future change should go
+- what logic is shared
+- where future changes belong
 
 ---
 
-## Rule 4: Prefer predictable naming across repositories
+## Rule 4: Prefer predictable naming
 
 Use stable names like:
 
-- components
-- features
-- hooks
-- services
-- domain
-- types
+components  
+features  
+hooks  
+services  
+domain  
+types
 
-Avoid creative or inconsistent folder naming that forces people or agents to relearn the structure each time.
-
----
-
-## Rule 5: Colocate when it improves clarity, centralize when it improves reuse
-
-Not all code should be globally centralized.
-
-Use colocation when logic is tightly bound to a feature.
-
-Use shared top-level folders when logic is reused broadly.
-
-The decision should improve scanability, not ideology.
+Avoid creative folder names that increase cognitive load.
 
 ---
 
-## Rule 6: Avoid miscellaneous dump folders
+## Rule 5: Colocate when helpful, centralize when reusable
 
-Avoid vague names like:
+Not all logic should be centralized.
 
-- misc
-- helpers
-- stuff
-- shared2
-- common_temp
+Use colocation for feature-specific code.
 
-Every folder should have a clear purpose that can be explained in one sentence.
+Use shared folders for broadly reused logic.
+
+---
+
+## Rule 6: Avoid miscellaneous folders
+
+Avoid vague names such as:
+
+misc  
+helpers  
+stuff  
+shared2  
+
+Every folder should have a clear, explainable purpose.
 
 ---
 
 ## Rule 7: Optimize for scanning
 
-A future developer or agent should be able to:
+A developer or agent should be able to quickly:
 
-- find the app entry path quickly
-- locate business logic without searching the whole repo
-- identify architectural rules at the top level
-- distinguish feature-local code from shared code
-- understand where to place new code without guessing
+- locate the UI entry point
+- find business logic
+- find architecture rules
+- identify feature boundaries
+- determine where new code should go
 
-If the structure makes that hard, the structure needs improvement.
+If that is difficult, the structure should be improved.
 
 ---
 
 # Human and Agent Accessibility
 
-This repository is designed to be read and operated by both humans and agents.
+This repository is designed for both human and agent interaction.
 
-That means the structure should support:
+The structure should support:
 
 - fast scanning
-- obvious folder intent
-- stable naming
-- low ambiguity
-- easy routing of work to the correct file or folder
+- clear folder intent
+- predictable naming
+- minimal ambiguity
 
-Agents should not need hidden knowledge to infer:
+Agents should not require hidden knowledge to determine:
 
-- where UI work goes
-- where business logic goes
-- where workflow docs live
+- where UI logic lives
+- where business logic lives
+- where workflows live
 - where architecture rules live
-- where schemas and templates live
 
-The repository itself should communicate these boundaries clearly.
+The repository structure itself should communicate these boundaries.
 
 ---
 
 # Evolution Rules
 
-The structure may evolve, but changes should be deliberate.
+Repository structure may evolve, but changes must be deliberate.
 
-A structural change is justified when it materially improves:
+Structural changes should only occur when they materially improve:
 
-- scanability
 - maintainability
-- architectural clarity
+- clarity
+- scanning
 - reuse
 - onboarding
-- agent execution reliability
+- agent reliability
 
-Do not reorganize folders casually.
-
-Repository structure changes should be made carefully because they affect:
-
-- code discovery
-- workflow references
-- agent execution patterns
-- documentation accuracy
-
-Major structure changes should be reflected in:
+Major changes should update:
 
 - architecture/repo_structure.md
 - related workflow documentation
-- any impacted templates or agent instructions
+- affected templates or agent instructions
 
 ---
 
 # Standard of Judgment
 
-A good repo structure should make the right place for a new change feel obvious.
+A strong repository structure makes the correct location for new work obvious.
 
-If developers or agents regularly ask:
+If developers or agents frequently ask:
 
 - where should this file go?
-- should this live in a page, hook, service, or util?
-- where are the system rules documented?
-- where do I find workflow instructions?
+- where is the business logic?
+- where are the architecture rules?
 
-then the structure is not yet good enough.
+then the structure needs improvement.
 
 The best repository structure is not the most clever.
 
