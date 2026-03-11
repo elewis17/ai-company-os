@@ -1,112 +1,115 @@
-# System Architecture Principles
+# System Architecture
 
-This document defines the architectural model used across the repository.
+## Purpose
 
-The goal is to maintain a system that is:
+This document defines the default target architecture for applications built in this repository.
+
+It exists to create a system that is:
 
 - predictable
 - maintainable
 - easy to reason about
 - safe to evolve over time
 
-Architecture should optimize for long-term clarity rather than short-term convenience.
+This document describes the architectural standard new work should follow.
 
----
-
-# Default Application Shape
-
-Most applications built in this repository follow this stack:
-
-Frontend
-- TypeScript
-- React
-- Vite or Next.js depending on deployment needs
-
-Backend
-- Supabase
-- PostgreSQL
-- Edge Functions when server logic is required
-
-Authentication
-- Managed authentication provider
-- Row Level Security (RLS) used to enforce access policies
-
-Deployment
-- Vercel or Cloudflare depending on the application
-
-Telemetry / Observability
-- OpenTelemetry
-- structured logs
-- error tracking where appropriate
-
-This stack provides a balance of developer velocity, reliability, and scalability.
+Existing applications in the repository may not yet fully conform to this structure.  
+Where that is true, the expectation is to move them toward this architecture over time through normal feature work and targeted refactoring.
 
 ---
 
 # Architectural Philosophy
 
-The system follows a layered architecture designed to keep responsibilities clearly separated.
+The default architecture should optimize for:
 
-Key goals:
+- clear separation of responsibilities
+- predictable data flow
+- minimal hidden coupling
+- maintainability over time
+- ease of scanning and understanding the codebase
 
-- isolate business logic from UI
-- make data access explicit
-- avoid hidden coupling
-- maintain predictable data flow
+The system should make it obvious:
 
-Code should be organized so that developers can quickly understand:
+- where UI logic belongs
+- where business logic belongs
+- where data access belongs
+- where architectural changes must be made carefully
 
-- where logic belongs
-- where data originates
-- where changes should be made safely
+The goal is not abstraction for its own sake.  
+The goal is a codebase that remains understandable as it grows.
 
 ---
 
-# System Layers
+# Default Application Shape
 
-Applications follow a layered structure.
+Applications in this repository will typically follow this shape:
+
+Frontend
+- TypeScript
+- React
+- Vite by default unless another frontend framework is intentionally chosen
+
+Backend / Data
+- Supabase
+- PostgreSQL
+- Edge Functions where server-side logic is required
+
+Authentication
+- managed authentication
+- RLS / RBAC where applicable
+
+Deployment
+- deployment approach may vary by project
+- current projects may use GitHub Pages or other deployment targets depending on needs
+
+Observability
+- logging, error tracking, and telemetry should be added where appropriate
+- observability tooling is project-specific unless explicitly standardized
+
+---
+
+# Target Layered Architecture
+
+Applications should follow a layered structure.
 
 ## 1. UI Layer
 
 Purpose:
 - presentation
+- rendering
 - user interaction
-- visual state
 
 Responsibilities:
-- rendering components
-- handling user input
-- invoking application logic through hooks
+- display data
+- collect user input
+- invoke application behavior through hooks or handlers
 
 Constraints:
-- no direct database access
-- no business logic
-- minimal state orchestration
+- no direct database calls
+- no embedded business logic
+- no hidden service orchestration
 
-UI should remain thin and focused on presentation.
+The UI layer should stay focused on presentation and interaction.
 
 ---
 
-## 2. Application Layer (Hooks)
+## 2. Application Layer
 
 Purpose:
-- orchestrate UI state
-- coordinate user interactions
-- connect UI to domain logic
+- orchestrate state and user-driven behavior
+
+Typical implementation forms:
+- hooks
+- controllers
+- feature-level state modules
 
 Responsibilities:
-- state management
-- side effects
-- calling services
-- managing UI behavior
+- coordinate UI state
+- handle side effects
+- manage interaction flow
+- call domain or service logic
 
-Hooks act as the bridge between the UI and domain logic.
-
-Examples:
-
-- data loading
-- user interaction flows
-- optimistic updates
+This layer acts as the bridge between the UI and the business/domain layer.
 
 ---
 
@@ -114,150 +117,183 @@ Examples:
 
 Purpose:
 - implement business logic
-- orchestrate external services
-- enforce system rules
+- enforce application rules
+- orchestrate external service behavior
 
 Responsibilities:
-
-- business rules
-- domain calculations
-- service orchestration
-- interaction with APIs
-
-Services should remain independent from UI concerns.
-
-They should be testable and reusable.
+- business calculations
+- decision rules
+- domain transformations
+- integration orchestration
 
 Examples:
-
-- pricing logic
-- analytics calculations
-- financial modeling
+- financial calculations
+- lease analysis rules
 - deal evaluation
-- workflow orchestration
+- scenario modeling
+- cross-service workflows
+
+This layer must remain independent from UI concerns.
 
 ---
 
 ## 4. Data Layer
 
 Purpose:
-- interact with persistent storage
+- interact with persistence and external data systems
 
 Responsibilities:
-
 - database queries
+- schema definitions
 - migrations
-- data validation
 - access policies
-- schema definitions
+- repository/data-access functions
+- external API persistence logic where applicable
 
-This layer includes:
+Constraints:
+- data access should be explicit
+- schema changes must go through controlled migrations
+- access rules must be enforced at the proper boundary
 
-- Supabase queries
-- database migrations
-- RLS policies
-- schema definitions
-
-All database access must pass through this layer.
+All persistent data interaction should flow through this layer.
 
 ---
 
-# Data Flow
+# Default Data Flow
 
-The system follows a predictable flow of data.
+The intended data flow is:
 
-UI Component  
-→ Hook / Application Layer  
-→ Service / Domain Logic  
-→ Data Layer / Database
+UI  
+→ Application Layer  
+→ Domain / Services Layer  
+→ Data Layer
 
-Responses follow the reverse path.
+Responses flow back upward:
 
-Database  
-→ Service  
-→ Hook  
+Data Layer  
+→ Domain / Services Layer  
+→ Application Layer  
 → UI
 
-This structure prevents hidden dependencies and keeps logic organized.
+This structure exists to avoid:
+
+- business logic leakage into components
+- direct database access from UI
+- hidden dependencies between unrelated modules
+- hard-to-trace side effects
 
 ---
 
-# Architecture Guardrails
+# Architectural Guardrails
 
-The following rules protect the integrity of the architecture.
-
-These should not be violated.
+The following rules are mandatory for the target architecture.
 
 ## UI Rules
 
 - UI components must not call the database directly
-- UI components must not implement business logic
-- UI components should remain presentation focused
+- UI components must not contain core business logic
+- pages and components should remain presentation-focused
 
-## Domain Logic Rules
+## Application Layer Rules
 
-- business logic must live in services or domain modules
-- services must not depend on UI components
+- application-layer code should coordinate behavior, not store core business rules
+- state orchestration should remain separate from rendering
 
-## Data Access Rules
+## Domain Rules
 
-- database access must be centralized
-- queries should not be scattered across the codebase
-- schema changes must go through migrations
+- business logic belongs in domain modules or services
+- domain logic should be reusable and testable
+- domain logic must not depend on UI components
 
-## Dependency Direction
+## Data Rules
 
-Dependencies should flow downward:
+- data access should be centralized and explicit
+- queries should not be scattered across the UI
+- schema and policy changes must be reviewed carefully
+
+## Dependency Direction Rules
+
+Dependencies should flow downward only:
 
 UI  
 → Application Layer  
-→ Domain Layer  
+→ Domain / Services Layer  
 → Data Layer
 
-Lower layers should never depend on higher layers.
+Lower layers must not depend on higher layers.
 
 ---
 
-# Architectural Decision Documentation
+# Current-State Reality vs Target-State Standard
 
-Any change that affects core architecture must be documented.
+This repository may contain applications or modules that were built quickly and do not yet fully conform to this architecture.
 
-Examples include:
+That does not invalidate the standard.
 
-- database schema changes
-- authentication model changes
-- deployment model changes
-- core system architecture changes
+Instead:
 
-These changes require:
+- new work should follow this architecture
+- refactors should move existing code toward this structure
+- major monolithic areas should be reduced over time when doing so materially improves maintainability
 
-- PRD linkage
-- architecture note
+The architecture standard defines the direction of travel, not a false claim that all existing code is already cleanly structured.
+
+---
+
+# Change Policy
+
+Any change that materially affects:
+
+- data model
+- security model
+- authentication boundaries
+- deployment architecture
+- major module boundaries
+- core system behavior
+
+requires:
+
+- PRD linkage where applicable
+- architecture documentation update
 - tests
 - explicit review signoff
 
-This prevents undocumented architectural drift.
+Major architectural changes must not happen silently.
 
 ---
 
-# Evolution of the Architecture
+# Architectural Evolution
 
-The system should evolve intentionally.
+The architecture should evolve deliberately.
 
-When architecture becomes difficult to reason about:
+Refactor toward better structure when:
 
-- refactor modules
-- clarify boundaries
-- simplify dependencies
+- business logic is leaking into UI
+- data access is scattered
+- files or modules become difficult to scan
+- dependencies become confusing
+- responsibilities are mixed together
 
-Avoid accumulating hidden complexity.
+Do not introduce complexity just to appear architectural.
 
-The goal is a system that remains understandable even as it grows.
+Prefer the simplest structure that preserves:
+
+- clarity
+- separation of concerns
+- safe changeability
+- long-term maintainability
 
 ---
 
-# Final Principle
+# Standard of Judgment
 
-Architecture exists to make the system easier to build, maintain, and evolve.
+When choosing between two architectural approaches, prefer the one that is:
 
-If a change makes the system harder to understand or maintain, it should be reconsidered before being introduced.
+- easier to understand
+- easier to test
+- easier to change safely
+- more consistent with repository patterns
+- less likely to create hidden coupling
+
+The best architecture is not the most abstract.  
+It is the one that keeps the system understandable as it grows.
