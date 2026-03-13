@@ -4,11 +4,12 @@ import sys
 from pathlib import Path
 from openai import OpenAI
 
-BASE = Path("/workspaces/ai-company-os/runtime/indexer")
+BASE = Path(__file__).resolve().parent
 EMBED_FILE = BASE / "doc_embeddings.json"
 OUT_FILE = BASE / "retrieved_paths.json"
 
 client = OpenAI()
+
 
 def cosine_similarity(a, b):
     dot = sum(x * y for x, y in zip(a, b))
@@ -18,6 +19,7 @@ def cosine_similarity(a, b):
         return 0.0
     return dot / (norm_a * norm_b)
 
+
 def embed_query(text: str):
     resp = client.embeddings.create(
         model="text-embedding-3-small",
@@ -25,7 +27,11 @@ def embed_query(text: str):
     )
     return resp.data[0].embedding
 
+
 def retrieve(query: str, top_k: int = 5):
+    if not EMBED_FILE.exists():
+        raise FileNotFoundError(f"Embeddings file not found: {EMBED_FILE}")
+
     with open(EMBED_FILE, "r", encoding="utf-8") as f:
         docs = json.load(f)
 
@@ -33,19 +39,24 @@ def retrieve(query: str, top_k: int = 5):
     scored = []
 
     for doc in docs:
-        score = cosine_similarity(q_vec, doc["embedding"])
+        embedding = doc.get("embedding")
+        if not embedding:
+            continue
+
+        score = cosine_similarity(q_vec, embedding)
         scored.append({
             "score": score,
-            "path": doc["path"],
-            "purpose": doc["purpose"],
-            "summary": doc["summary"]
+            "path": doc.get("path", ""),
+            "purpose": doc.get("purpose", ""),
+            "summary": doc.get("summary", "")
         })
 
     scored.sort(key=lambda x: x["score"], reverse=True)
     return scored[:top_k]
 
+
 if __name__ == "__main__":
-    query = sys.argv[1] if len(sys.argv) > 1 else "default issue query"
+    query = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "default issue query"
     results = retrieve(query, top_k=5)
 
     with open(OUT_FILE, "w", encoding="utf-8") as f:
