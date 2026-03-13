@@ -1,0 +1,261 @@
+{
+  "generated_at": "2026-03-12T02:22:25.572063",
+  "files": [
+    {
+      "repo": "ai-company-os",
+      "path": "README.md",
+      "name": "README.md",
+      "extension": ".md",
+      "size_bytes": 1199,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/prd_template.md",
+      "name": "prd_template.md",
+      "extension": ".md",
+      "size_bytes": 177,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/architecture_decision_record.md",
+      "name": "architecture_decision_record.md",
+      "extension": ".md",
+      "size_bytes": 69,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/task_brief_template.md",
+      "name": "task_brief_template.md",
+      "extension": ".md",
+      "size_bytes": 155,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/repo_structure.md",
+      "name": "repo_structure.md",
+      "extension": ".md",
+      "size_bytes": 10990,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/coding_standards.md",
+      "name": "coding_standards.md",
+      "extension": ".md",
+      "size_bytes": 4925,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/system_architecture.md",
+      "name": "system_architecture.md",
+      "extension": ".md",
+      "size_bytes": 6674,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/security_principles.md",
+      "name": "security_principles.md",
+      "extension": ".md",
+      "size_bytes": 7270,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": ".github/workflows/ci.yml",
+      "name": "ci.yml",
+      "extension": ".yml",
+      "size_bytes": 778,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/product_strategy.md",
+      "name": "product_strategy.md",
+      "extension": ".md",
+      "size_bytes": 634,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/company_vision.md",
+      "name": "company_vision.md",
+      "extension": ".md",
+      "size_bytes": 819,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/operating_principles.md",
+      "name": "operating_principles.md",
+      "extension": ".md",
+      "size_bytes": 540,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "schemas/task_contract.json",
+      "name": "task_contract.json",
+      "extension": ".json",
+      "size_bytes": 1791,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/release_process.md",
+      "name": "release_process.md",
+      "extension": ".md",
+      "size_bytes": 3520,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/feature_development.md",
+      "name": "feature_development.md",
+      "extension": ".md",
+      "size_bytes": 6794,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/handoff_standard.md",
+      "name": "handoff_standard.md",
+      "extension": ".md",
+      "size_bytes": 1669,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/incident_response.md",
+      "name": "incident_response.md",
+      "extension": ".md",
+      "size_bytes": 4757,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/documentation_ownership.md",
+      "name": "documentation_ownership.md",
+      "extension": ".md",
+      "size_bytes": 3708,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/knowledge_update_loop.md",
+      "name": "knowledge_update_loop.md",
+      "extension": ".md",
+      "size_bytes": 5260,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/sprint_planning.md",
+      "name": "sprint_planning.md",
+      "extension": ".md",
+      "size_bytes": 4079,
+      "modified": "2026-03-12T02:21:27.102478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/pull_request_review.md",
+      "name": "pull_request_review.md",
+      "extension": ".md",
+      "size_bytes": 6501,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/operational_metrics.md",
+      "name": "operational_metrics.md",
+      "extension": ".md",
+      "size_bytes": 3793,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "scripts/bootstrap_notes.md",
+      "name": "bootstrap_notes.md",
+      "extension": ".md",
+      "size_bytes": 536,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/qa_analyst.md",
+      "name": "qa_analyst.md",
+      "extension": ".md",
+      "size_bytes": 6877,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/project_manager.md",
+      "name": "project_manager.md",
+      "extension": ".md",
+      "size_bytes": 2888,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/product_manager.md",
+      "name": "product_manager.md",
+      "extension": ".md",
+      "size_bytes": 5605,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/software_engineer.md",
+      "name": "software_engineer.md",
+      "extension": ".md",
+      "size_bytes": 11477,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/technical_architect.md",
+      "name": "technical_architect.md",
+      "extension": ".md",
+      "size_bytes": 7759,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "runtime/indexer/indexer.py",
+      "name": "indexer.py",
+      "extension": ".py",
+      "size_bytes": 1436,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/daily_report_template.md",
+      "name": "daily_report_template.md",
+      "extension": ".md",
+      "size_bytes": 358,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/weekly_strategy_review.md",
+      "name": "weekly_strategy_review.md",
+      "extension": ".md",
+      "size_bytes": 134,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/executive_brief_template.md",
+      "name": "executive_brief_template.md",
+      "extension": ".md",
+      "size_bytes": 1803,
+      "modified": "2026-03-12T02:21:27.100477"
+    }
+  ]
+}

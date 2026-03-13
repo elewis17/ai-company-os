@@ -1,0 +1,761 @@
+{
+  "generated_at": "2026-03-12T02:42:25.163299+00:00",
+  "documents": [
+    {
+      "repo": "ai-company-os",
+      "path": "README.md",
+      "name": "README.md",
+      "purpose": "general_project_file",
+      "headings": [
+        "AI Company OS",
+        "Purpose",
+        "Structure"
+      ],
+      "intro_lines": [
+        "This repository contains the operating system for a hypothetical AI\u2011powered software company. The intent is to provide structured documentation, roles, workflows, and templates that guide AI agents in building and maintaining software products. The repository is organized into directories covering company strategy, architecture, agent roles, workflows, reports, schemas, and CI configuration.",
+        "To serve as a nucleus for an AI\u2011driven development organization, enabling consistent quality, repeatable processes, and a clear chain of command.",
+        "- **`company/`**: vision, product strategy and operating principles.",
+        "- **`architecture/`**: system architecture, coding standards, repository structure and security principles.",
+        "- **`agents/`**: detailed responsibilities and outputs for each agent role."
+      ],
+      "summary": "README.md is a general project file file. Main sections: AI Company OS, Purpose, Structure. Opening content: This repository contains the operating system for a hypothetical AI\u2011powered software company. The intent is to provide structured documentation, roles, workflows, and templates that guide AI agents in building and maintaining software products. The repository is organized into directories covering c",
+      "size_bytes": 1199,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/prd_template.md",
+      "name": "prd_template.md",
+      "purpose": "template_artifact",
+      "headings": [
+        "Product Requirement Document",
+        "Problem",
+        "Target user",
+        "Desired outcome",
+        "Scope",
+        "Out of scope",
+        "Acceptance criteria",
+        "Risks / assumptions"
+      ],
+      "intro_lines": [],
+      "summary": "prd_template.md is a template artifact file. Main sections: Product Requirement Document, Problem, Target user, Desired outcome. It is located at templates/prd_template.md.",
+      "size_bytes": 177,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/architecture_decision_record.md",
+      "name": "architecture_decision_record.md",
+      "purpose": "template_artifact",
+      "headings": [
+        "ADR",
+        "Title",
+        "Status",
+        "Context",
+        "Decision",
+        "Consequences"
+      ],
+      "intro_lines": [],
+      "summary": "architecture_decision_record.md is a template artifact file. Main sections: ADR, Title, Status, Context. It is located at templates/architecture_decision_record.md.",
+      "size_bytes": 69,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "templates/task_brief_template.md",
+      "name": "task_brief_template.md",
+      "purpose": "template_artifact",
+      "headings": [
+        "Task Brief",
+        "Task ID",
+        "Parent PRD",
+        "Objective",
+        "Scope",
+        "Constraints",
+        "Files likely impacted",
+        "Acceptance criteria"
+      ],
+      "intro_lines": [],
+      "summary": "task_brief_template.md is a template artifact file. Main sections: Task Brief, Task ID, Parent PRD, Objective. It is located at templates/task_brief_template.md.",
+      "size_bytes": 155,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/repo_structure.md",
+      "name": "repo_structure.md",
+      "purpose": "architecture_rule",
+      "headings": [
+        "Repo Structure",
+        "Purpose",
+        "Core Principles",
+        "Top-Level Repository Structure",
+        "Top-Level Folder Responsibilities",
+        "src/",
+        "public/",
+        "supabase/"
+      ],
+      "intro_lines": [
+        "This document defines the default repository structure for applications and operating-system files in this repository.",
+        "The goals of the structure are:",
+        "- clarity",
+        "- scanability",
+        "- consistency"
+      ],
+      "summary": "repo_structure.md is a architecture rule file. Main sections: Repo Structure, Purpose, Core Principles, Top-Level Repository Structure. Opening content: This document defines the default repository structure for applications and operating-system files in this repository. The goals of the structure are:",
+      "size_bytes": 10990,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/coding_standards.md",
+      "name": "coding_standards.md",
+      "purpose": "architecture_rule",
+      "headings": [
+        "Coding Standards",
+        "Core Philosophy",
+        "General Principles",
+        "Cohesion vs Fragmentation",
+        "File Length Guidance",
+        "Top-Level Orchestration",
+        "Responsibility Separation",
+        "TypeScript / TSX Guidelines"
+      ],
+      "intro_lines": [
+        "This document defines the coding philosophy and conventions used across the codebase.",
+        "The goal is to maintain clarity, maintainability, and predictable structure while avoiding unnecessary complexity or fragmentation.",
+        "---",
+        "Code should be:",
+        "- Easy to read"
+      ],
+      "summary": "coding_standards.md is a architecture rule file. Main sections: Coding Standards, Core Philosophy, General Principles, Cohesion vs Fragmentation. Opening content: This document defines the coding philosophy and conventions used across the codebase. The goal is to maintain clarity, maintainability, and predictable structure while avoiding unnecessary complexity or fragmentation.",
+      "size_bytes": 4925,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/system_architecture.md",
+      "name": "system_architecture.md",
+      "purpose": "architecture_rule",
+      "headings": [
+        "System Architecture",
+        "Purpose",
+        "Architectural Philosophy",
+        "Default Application Shape",
+        "Target Layered Architecture",
+        "1. UI Layer",
+        "2. Application Layer",
+        "3. Domain / Services Layer"
+      ],
+      "intro_lines": [
+        "This document defines the default target architecture for applications built in this repository.",
+        "It exists to create a system that is:",
+        "- predictable",
+        "- maintainable",
+        "- easy to reason about"
+      ],
+      "summary": "system_architecture.md is a architecture rule file. Main sections: System Architecture, Purpose, Architectural Philosophy, Default Application Shape. Opening content: This document defines the default target architecture for applications built in this repository. It exists to create a system that is:",
+      "size_bytes": 6674,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "architecture/security_principles.md",
+      "name": "security_principles.md",
+      "purpose": "architecture_rule",
+      "headings": [
+        "Security Principles",
+        "Purpose",
+        "Core Security Philosophy",
+        "Principle 1 \u2014 Least Privilege",
+        "Principle 2 \u2014 Secure By Default",
+        "Principle 3 \u2014 No Secrets in Source Control",
+        "Principle 4 \u2014 Authentication Before Authorization",
+        "Principle 5 \u2014 Strong Authorization Controls"
+      ],
+      "intro_lines": [
+        "This document defines the security principles that govern how systems in this repository must be built, deployed, and maintained.",
+        "Security should not be treated as an afterthought or a later phase of development.",
+        "Security must be integrated into system architecture, development workflows, and operational practices.",
+        "The goal is not perfect theoretical security.",
+        "The goal is **practical, enforceable security that prevents common failures.**"
+      ],
+      "summary": "security_principles.md is a architecture rule file. Main sections: Security Principles, Purpose, Core Security Philosophy, Principle 1 \u2014 Least Privilege. Opening content: This document defines the security principles that govern how systems in this repository must be built, deployed, and maintained. Security should not be treated as an afterthought or a later phase of development.",
+      "size_bytes": 7270,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": ".github/workflows/ci.yml",
+      "name": "ci.yml",
+      "purpose": "automation_workflow",
+      "headings": [],
+      "intro_lines": [
+        "name: CI",
+        "on:",
+        "pull_request:",
+        "push:",
+        "branches: [main]"
+      ],
+      "summary": "ci.yml is a automation workflow file. Opening content: name: CI on:",
+      "size_bytes": 778,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/product_strategy.md",
+      "name": "product_strategy.md",
+      "purpose": "company_strategy",
+      "headings": [
+        "Product Strategy",
+        "Objective",
+        "Product manager goals",
+        "Prioritization framework",
+        "Product outputs"
+      ],
+      "intro_lines": [
+        "Build products that are commercially viable, technically maintainable, and scalable with a lean team of AI agents.",
+        "- Find problems worth solving",
+        "- Prioritize features based on user value and commercial impact",
+        "- Avoid gold-plating and vanity features",
+        "- Keep roadmap tied to revenue, retention, and differentiation"
+      ],
+      "summary": "product_strategy.md is a company strategy file. Main sections: Product Strategy, Objective, Product manager goals, Prioritization framework. Opening content: Build products that are commercially viable, technically maintainable, and scalable with a lean team of AI agents. - Find problems worth solving",
+      "size_bytes": 634,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/company_vision.md",
+      "name": "company_vision.md",
+      "purpose": "company_strategy",
+      "headings": [
+        "Company Vision",
+        "Mission",
+        "Success criteria",
+        "Founder role"
+      ],
+      "intro_lines": [
+        "Build software with an AI-native operating model that is fast, high quality, repeatable, and commercially disciplined.",
+        "Use AI agents as specialized workers inside a governed software company, while the founder acts as CEO, principal strategist, and final approver.",
+        "- Ship products faster without sacrificing code quality",
+        "- Maintain clear architecture, documentation, and rollback safety",
+        "- Reuse the operating system across multiple software products"
+      ],
+      "summary": "company_vision.md is a company strategy file. Main sections: Company Vision, Mission, Success criteria, Founder role. Opening content: Build software with an AI-native operating model that is fast, high quality, repeatable, and commercially disciplined. Use AI agents as specialized workers inside a governed software company, while the founder acts as CEO, principal strategist, and final approver.",
+      "size_bytes": 819,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "company/operating_principles.md",
+      "name": "operating_principles.md",
+      "purpose": "company_strategy",
+      "headings": [
+        "Operating Principles"
+      ],
+      "intro_lines": [
+        "1. Process beats heroics.",
+        "2. Architecture is deliberate, not improvised.",
+        "3. Small, reviewable changes beat giant rewrites.",
+        "4. All work must leave a trail: docs, tasks, commits, PRs.",
+        "5. Agents advise and execute; gates decide."
+      ],
+      "summary": "operating_principles.md is a company strategy file. Main sections: Operating Principles. Opening content: 1. Process beats heroics. 2. Architecture is deliberate, not improvised.",
+      "size_bytes": 540,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "schemas/task_contract.json",
+      "name": "task_contract.json",
+      "purpose": "schema_contract",
+      "headings": [],
+      "intro_lines": [
+        "{",
+        "\"$schema\": \"https://json-schema.org/draft/2020-12/schema\",",
+        "\"title\": \"TaskContract\",",
+        "\"type\": \"object\",",
+        "\"required\": ["
+      ],
+      "summary": "task_contract.json is a schema contract file. Opening content: { \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",",
+      "size_bytes": 1791,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/release_process.md",
+      "name": "release_process.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Release Process",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Workflow Steps",
+        "1. Release Readiness Check",
+        "2. QA Final Verification",
+        "3. Build Verification"
+      ],
+      "intro_lines": [
+        "Define the controlled process for deploying validated software changes to production.",
+        "This workflow ensures:",
+        "- only approved features are released",
+        "- deployments are stable and reversible",
+        "- regressions are detected quickly"
+      ],
+      "summary": "release_process.md is a workflow definition file. Main sections: Workflow: Release Process, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the controlled process for deploying validated software changes to production. This workflow ensures:",
+      "size_bytes": 3520,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/feature_development.md",
+      "name": "feature_development.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Feature Development",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Workflow Steps",
+        "1. Direction Alignment",
+        "2. Product Definition",
+        "3. Scope Approval"
+      ],
+      "intro_lines": [
+        "Define the standard process for converting approved product scope into implemented, validated, and documented features.",
+        "This workflow ensures:",
+        "- clear ownership at every step",
+        "- strong coordination between agents",
+        "- architecture compliance"
+      ],
+      "summary": "feature_development.md is a workflow definition file. Main sections: Workflow: Feature Development, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the standard process for converting approved product scope into implemented, validated, and documented features. This workflow ensures:",
+      "size_bytes": 6794,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/handoff_standard.md",
+      "name": "handoff_standard.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow Handoff Standard",
+        "Purpose",
+        "Required Handoff Fields",
+        "Status",
+        "Completed Work",
+        "Artifacts Updated",
+        "Decision or Outcome",
+        "Next Owner"
+      ],
+      "intro_lines": [
+        "Ensure clear ownership transfer between agents during workflow execution.",
+        "Autonomous organizations fail when work is completed but responsibility for the next step is unclear.",
+        "This standard ensures every workflow stage ends with a clear operational handoff.",
+        "---",
+        "Every workflow stage must produce a handoff containing the following information."
+      ],
+      "summary": "handoff_standard.md is a workflow definition file. Main sections: Workflow Handoff Standard, Purpose, Required Handoff Fields, Status. Opening content: Ensure clear ownership transfer between agents during workflow execution. Autonomous organizations fail when work is completed but responsibility for the next step is unclear.",
+      "size_bytes": 1669,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/incident_response.md",
+      "name": "incident_response.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Incident Response",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Workflow Steps",
+        "1. Incident Detection",
+        "2. Incident Triage",
+        "3. Mitigation"
+      ],
+      "intro_lines": [
+        "Define the controlled process for responding to production incidents, service disruptions, and system failures.",
+        "This workflow ensures:",
+        "- incidents are identified quickly",
+        "- mitigation occurs rapidly",
+        "- ownership is clear"
+      ],
+      "summary": "incident_response.md is a workflow definition file. Main sections: Workflow: Incident Response, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the controlled process for responding to production incidents, service disruptions, and system failures. This workflow ensures:",
+      "size_bytes": 4757,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/documentation_ownership.md",
+      "name": "documentation_ownership.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Standard: Documentation Ownership",
+        "Purpose",
+        "Core Principles",
+        "Ownership by Role",
+        "Founder",
+        "Product Manager",
+        "Technical Architect",
+        "Project Manager"
+      ],
+      "intro_lines": [
+        "Ensure documentation remains organized, current, and owned by the appropriate role.",
+        "Clear ownership prevents documentation decay and ensures agents always operate using reliable, current information.",
+        "---",
+        "1. Every documentation domain must have a clear owner.",
+        "2. Documentation must be updated when the underlying system changes."
+      ],
+      "summary": "documentation_ownership.md is a workflow definition file. Main sections: Standard: Documentation Ownership, Purpose, Core Principles, Ownership by Role. Opening content: Ensure documentation remains organized, current, and owned by the appropriate role. Clear ownership prevents documentation decay and ensures agents always operate using reliable, current information.",
+      "size_bytes": 3708,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/knowledge_update_loop.md",
+      "name": "knowledge_update_loop.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Knowledge Update Loop",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Workflow Steps",
+        "1. Monitor for Improvement Opportunities",
+        "2. Evaluate Relevance",
+        "3. Prepare Improvement Proposal"
+      ],
+      "intro_lines": [
+        "Ensure the organization continuously improves its engineering practices, architecture, and operational model without chasing trends or introducing unnecessary complexity.",
+        "This workflow allows the system to evolve deliberately while preserving architectural stability and execution reliability.",
+        "---",
+        "1. Improvements must solve a real operational problem.",
+        "2. Architectural stability is preferred over novelty."
+      ],
+      "summary": "knowledge_update_loop.md is a workflow definition file. Main sections: Workflow: Knowledge Update Loop, Purpose, Core Principles, Roles in this Workflow. Opening content: Ensure the organization continuously improves its engineering practices, architecture, and operational model without chasing trends or introducing unnecessary complexity. This workflow allows the system to evolve deliberately while preserving architectural stability and execution reliability.",
+      "size_bytes": 5260,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/sprint_planning.md",
+      "name": "sprint_planning.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Sprint Planning",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Workflow Steps",
+        "1. Backlog Review",
+        "2. Capacity Assessment",
+        "3. Technical Feasibility Check"
+      ],
+      "intro_lines": [
+        "Define how work is selected, sequenced, and committed for the next execution cycle.",
+        "This workflow ensures:",
+        "- the highest-value work is prioritized",
+        "- agents are not overloaded",
+        "- dependencies are respected"
+      ],
+      "summary": "sprint_planning.md is a workflow definition file. Main sections: Workflow: Sprint Planning, Purpose, Core Principles, Roles in this Workflow. Opening content: Define how work is selected, sequenced, and committed for the next execution cycle. This workflow ensures:",
+      "size_bytes": 4079,
+      "modified": "2026-03-12T02:21:27.102478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/pull_request_review.md",
+      "name": "pull_request_review.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Pull Request Review",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Pull Request Workflow",
+        "1. Pull Request Creation",
+        "2. Task Traceability Validation",
+        "3. Architecture Review"
+      ],
+      "intro_lines": [
+        "Define the standard process for reviewing pull requests before code is merged into the repository.",
+        "This workflow ensures:",
+        "- code changes match approved scope",
+        "- architecture standards are maintained",
+        "- security risks are caught"
+      ],
+      "summary": "pull_request_review.md is a workflow definition file. Main sections: Workflow: Pull Request Review, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the standard process for reviewing pull requests before code is merged into the repository. This workflow ensures:",
+      "size_bytes": 6501,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "workflows/operational_metrics.md",
+      "name": "operational_metrics.md",
+      "purpose": "workflow_definition",
+      "headings": [
+        "Workflow: Operational Metrics",
+        "Purpose",
+        "Core Principles",
+        "Roles in this Workflow",
+        "Key Metrics",
+        "Delivery Metrics",
+        "Quality Metrics",
+        "Reliability Metrics"
+      ],
+      "intro_lines": [
+        "Define how the organization measures engineering performance, system reliability, and operational health.",
+        "This workflow ensures:",
+        "- execution performance is visible",
+        "- system health is continuously monitored",
+        "- process improvements are informed by real data"
+      ],
+      "summary": "operational_metrics.md is a workflow definition file. Main sections: Workflow: Operational Metrics, Purpose, Core Principles, Roles in this Workflow. Opening content: Define how the organization measures engineering performance, system reliability, and operational health. This workflow ensures:",
+      "size_bytes": 3793,
+      "modified": "2026-03-12T02:21:27.101477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "scripts/bootstrap_notes.md",
+      "name": "bootstrap_notes.md",
+      "purpose": "general_project_file",
+      "headings": [
+        "Bootstrap Notes",
+        "First implementation steps",
+        "Recommended next docs"
+      ],
+      "intro_lines": [
+        "1. Put this repo in GitHub as your AI Company OS repo.",
+        "2. Add your preferred coding agent instructions to each agent file.",
+        "3. Create one working product repo and link back to this OS repo.",
+        "4. Configure branch protection in GitHub.",
+        "5. Add lint, typecheck, test, and build scripts to the product repo."
+      ],
+      "summary": "bootstrap_notes.md is a general project file file. Main sections: Bootstrap Notes, First implementation steps, Recommended next docs. Opening content: 1. Put this repo in GitHub as your AI Company OS repo. 2. Add your preferred coding agent instructions to each agent file.",
+      "size_bytes": 536,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/qa_analyst.md",
+      "name": "qa_analyst.md",
+      "purpose": "agent_role_definition",
+      "headings": [
+        "Quality Control Analyst Role",
+        "Mission",
+        "Responsibilities",
+        "Inputs",
+        "Outputs",
+        "Rules",
+        "Review Standards",
+        "File and Code Shape Standards"
+      ],
+      "intro_lines": [
+        "- Protect product quality, code quality, and system integrity.",
+        "- The Quality Control Analyst ensures that all delivered work is clear, testable, maintainable, consistent with architectural standards, and safe to merge.",
+        "- This role acts as the final quality gate before changes are accepted into the codebase.",
+        "- Review pull requests for code quality, architectural compliance, and standards adherence.",
+        "- Verify that implementation matches the PRD, acceptance criteria, and definition of done."
+      ],
+      "summary": "qa_analyst.md is a agent role definition file. Main sections: Quality Control Analyst Role, Mission, Responsibilities, Inputs. Opening content: - Protect product quality, code quality, and system integrity. - The Quality Control Analyst ensures that all delivered work is clear, testable, maintainable, consistent with architectural standards, and safe to merge.",
+      "size_bytes": 6877,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/project_manager.md",
+      "name": "project_manager.md",
+      "purpose": "agent_role_definition",
+      "headings": [
+        "Implementation Project Manager Role",
+        "Mission",
+        "Responsibilities",
+        "Authority Boundaries",
+        "Outputs",
+        "Rules",
+        "Delivery Standards",
+        "Quality Gates"
+      ],
+      "intro_lines": [
+        "Convert approved product requirements into clear tasks, coordinate specialists, track delivery, and report to the founder. Manage project execution, coordinate tasks among agents and report progress to stakeholders.",
+        "- break PRDs into executable and actionable tasks",
+        "- assign tasks to specialist agents",
+        "- track progress, blockers, quality, and cost",
+        "- maintain sprint plan and delivery timeline"
+      ],
+      "summary": "project_manager.md is a agent role definition file. Main sections: Implementation Project Manager Role, Mission, Responsibilities, Authority Boundaries. Opening content: Convert approved product requirements into clear tasks, coordinate specialists, track delivery, and report to the founder. Manage project execution, coordinate tasks among agents and report progress to stakeholders. - break PRDs into executable and actionable tasks",
+      "size_bytes": 2888,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/product_manager.md",
+      "name": "product_manager.md",
+      "purpose": "agent_role_definition",
+      "headings": [
+        "Product Manager Role",
+        "Mission",
+        "Responsibilities",
+        "Inputs",
+        "Outputs",
+        "Rules",
+        "Product Principles",
+        "Product Discovery"
+      ],
+      "intro_lines": [
+        "Translate founder direction into a commercially strong product roadmap and clear PRDs.",
+        "- Clarify product direction from founder conversations",
+        "- Define release goals and success metrics",
+        "- Challenge low-value work",
+        "- Conduct market research and competitor analysis."
+      ],
+      "summary": "product_manager.md is a agent role definition file. Main sections: Product Manager Role, Mission, Responsibilities, Inputs. Opening content: Translate founder direction into a commercially strong product roadmap and clear PRDs. - Clarify product direction from founder conversations",
+      "size_bytes": 5605,
+      "modified": "2026-03-12T02:21:27.098477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/software_engineer.md",
+      "name": "software_engineer.md",
+      "purpose": "agent_role_definition",
+      "headings": [
+        "Software Engineer Role",
+        "Mission",
+        "Responsibilities",
+        "Inputs",
+        "Outputs",
+        "Core Rules",
+        "Engineering Principles",
+        "Implementation Planning"
+      ],
+      "intro_lines": [
+        "Implement high-quality product changes that are correct, maintainable, easy to review, and fully aligned with the approved product requirements, architecture standards, and coding standards.",
+        "The Software Engineer exists to turn approved work into clean, practical implementation without introducing unnecessary complexity, architectural drift, or hidden maintenance burden.",
+        "- Implement assigned tasks within the approved scope.",
+        "- Follow the Product Manager's PRD, the Project Manager's task definition, and the Technical Architect's standards.",
+        "- Write code that is clear, simple, and easy to modify later."
+      ],
+      "summary": "software_engineer.md is a agent role definition file. Main sections: Software Engineer Role, Mission, Responsibilities, Inputs. Opening content: Implement high-quality product changes that are correct, maintainable, easy to review, and fully aligned with the approved product requirements, architecture standards, and coding standards. The Software Engineer exists to turn approved work into clean, practical implementation without introducing u",
+      "size_bytes": 11477,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "agents/technical_architect.md",
+      "name": "technical_architect.md",
+      "purpose": "agent_role_definition",
+      "headings": [
+        "Technical Architect Role",
+        "Mission",
+        "Responsibilities",
+        "Inputs",
+        "Outputs",
+        "Rules",
+        "Architecture Decision Records",
+        "Architecture Principles"
+      ],
+      "intro_lines": [
+        "Define and protect the system architecture so that the product remains scalable, maintainable, and easy for developers to extend.",
+        "The Technical Architect ensures that all technical work follows a coherent system design and prevents architectural drift as the product evolves.",
+        "- Define the overall system architecture and technical standards.",
+        "- Establish repository structure and service boundaries.",
+        "- Define coding standards, naming conventions, and module organization."
+      ],
+      "summary": "technical_architect.md is a agent role definition file. Main sections: Technical Architect Role, Mission, Responsibilities, Inputs. Opening content: Define and protect the system architecture so that the product remains scalable, maintainable, and easy for developers to extend. The Technical Architect ensures that all technical work follows a coherent system design and prevents architectural drift as the product evolves.",
+      "size_bytes": 7759,
+      "modified": "2026-03-12T02:21:27.099478"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "runtime/indexer/indexer.py",
+      "name": "indexer.py",
+      "purpose": "runtime_infrastructure",
+      "headings": [
+        "CONFIG"
+      ],
+      "intro_lines": [
+        "import os",
+        "import json",
+        "from pathlib import Path",
+        "from datetime import datetime",
+        "PRODUCT_REPO = \"../lease-lens-dash\""
+      ],
+      "summary": "indexer.py is a runtime infrastructure file. Main sections: CONFIG. Opening content: import os import json",
+      "size_bytes": 1436,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/daily_report_template.md",
+      "name": "daily_report_template.md",
+      "purpose": "report_artifact",
+      "headings": [
+        "Daily Executive Brief",
+        "Date",
+        "Progress",
+        "Sprint Status",
+        "Cost",
+        "Quality",
+        "SWOT",
+        "Executive Recommendations"
+      ],
+      "intro_lines": [
+        "- Completed:",
+        "- In progress:",
+        "- Blocked:",
+        "- % complete:",
+        "- on track / at risk:"
+      ],
+      "summary": "daily_report_template.md is a report artifact file. Main sections: Daily Executive Brief, Date, Progress, Sprint Status. Opening content: - Completed: - In progress:",
+      "size_bytes": 358,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/weekly_strategy_review.md",
+      "name": "weekly_strategy_review.md",
+      "purpose": "report_artifact",
+      "headings": [
+        "Weekly Strategy Review",
+        "Wins",
+        "Misses",
+        "Product learnings",
+        "Delivery learnings",
+        "Risk summary",
+        "Next week's priorities"
+      ],
+      "intro_lines": [],
+      "summary": "weekly_strategy_review.md is a report artifact file. Main sections: Weekly Strategy Review, Wins, Misses, Product learnings. It is located at reports/weekly_strategy_review.md.",
+      "size_bytes": 134,
+      "modified": "2026-03-12T02:21:27.100477"
+    },
+    {
+      "repo": "ai-company-os",
+      "path": "reports/executive_brief_template.md",
+      "name": "executive_brief_template.md",
+      "purpose": "report_artifact",
+      "headings": [
+        "Executive Brief",
+        "Purpose",
+        "Milestone Progress",
+        "Key Product Signals",
+        "Delivery Status",
+        "Risks and Issues",
+        "Architecture or Technical Decisions",
+        "Cost Awareness"
+      ],
+      "intro_lines": [
+        "Provide the Founder with a concise summary of project progress, risks, and decisions requiring attention.",
+        "The Founder should not need to review operational details or technical discussions.",
+        "This report exists to surface only the information required for leadership decisions.",
+        "---",
+        "Current Milestone:"
+      ],
+      "summary": "executive_brief_template.md is a report artifact file. Main sections: Executive Brief, Purpose, Milestone Progress, Key Product Signals. Opening content: Provide the Founder with a concise summary of project progress, risks, and decisions requiring attention. The Founder should not need to review operational details or technical discussions.",
+      "size_bytes": 1803,
+      "modified": "2026-03-12T02:21:27.100477"
+    }
+  ]
+}
