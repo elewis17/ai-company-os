@@ -7,6 +7,20 @@ BASE = Path(__file__).resolve().parent.parent
 RETRIEVER = BASE / "runtime/indexer/retrieve.py"
 RETRIEVED = BASE / "runtime/indexer/retrieved_paths.json"
 
+sys.path.append(str(BASE))
+
+from runtime.engine.run_workflow import run_workflow  # noqa: E402
+
+
+def select_workflow(paths: list[dict]) -> str:
+    retrieved_paths = [p.get("path", "") for p in paths]
+
+    if any(path.startswith("workflows/") for path in retrieved_paths):
+        return "process_change"
+
+    return "feature_development"
+
+
 title = sys.argv[1]
 body = sys.argv[2] if len(sys.argv) > 2 else ""
 
@@ -21,9 +35,19 @@ subprocess.run(
 
 print("Loading retrieved files...")
 
-paths = json.load(open(RETRIEVED))
+with open(RETRIEVED, "r", encoding="utf-8") as f:
+    paths = json.load(f)
 
-print("\nRelevant files:\n")
+workflow_name = select_workflow(paths)
 
-for p in paths:
-    print("-", p["path"])
+task = {
+    "issue_title": title,
+    "issue_body": body,
+    "workflow": workflow_name,
+    "retrieved_files": paths,
+}
+
+print(f"Selected workflow: {workflow_name}")
+print("Handing off to workflow engine...")
+
+run_workflow(task)

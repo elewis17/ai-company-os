@@ -1,0 +1,14 @@
+name: feature_development
+
+start_role: product_manager
+
+allowed_roles:
+  - product_manager
+  - project_manager
+  - technical_architect
+  - software_engineer
+  - qa_analyst
+
+termination_conditions:
+  - status: blocked
+  - status: requires revision

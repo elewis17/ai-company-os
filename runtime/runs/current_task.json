@@ -1,0 +1,37 @@
+{
+  "issue_title": "Test issue",
+  "issue_body": "Build the workflow handoff",
+  "workflow": "process_change",
+  "retrieved_files": [
+    {
+      "score": 0.46088944000509796,
+      "path": "workflows/handoff_standard.md",
+      "purpose": "workflow_definition",
+      "summary": "handoff_standard.md is a workflow definition file. Main sections: Workflow Handoff Standard, Purpose, Required Handoff Fields, Status. Opening content: Ensure clear ownership transfer between agents during workflow execution. Autonomous organizations fail when work is completed but responsibility for the next step is unclear."
+    },
+    {
+      "score": 0.43157791278807506,
+      "path": "workflows/feature_development.md",
+      "purpose": "workflow_definition",
+      "summary": "feature_development.md is a workflow definition file. Main sections: Workflow: Feature Development, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the standard process for converting approved product scope into implemented, validated, and documented features. This workflow ensures:"
+    },
+    {
+      "score": 0.4214927285678629,
+      "path": "workflows/release_process.md",
+      "purpose": "workflow_definition",
+      "summary": "release_process.md is a workflow definition file. Main sections: Workflow: Release Process, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the controlled process for deploying validated software changes to production. This workflow ensures:"
+    },
+    {
+      "score": 0.3891845031781009,
+      "path": "workflows/pull_request_review.md",
+      "purpose": "workflow_definition",
+      "summary": "pull_request_review.md is a workflow definition file. Main sections: Workflow: Pull Request Review, Purpose, Core Principles, Roles in this Workflow. Opening content: Define the standard process for reviewing pull requests before code is merged into the repository. This workflow ensures:"
+    },
+    {
+      "score": 0.3793212542533187,
+      "path": ".github/workflows/ci.yml",
+      "purpose": "automation_workflow",
+      "summary": "ci.yml is a automation workflow file. Opening content: name: CI on:"
+    }
+  ]
+}

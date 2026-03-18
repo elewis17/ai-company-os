@@ -1,0 +1,15 @@
+name: process_change
+
+start_role: technical_architect
+
+allowed_roles:
+  - product_manager
+  - project_manager
+  - technical_architect
+  - software_engineer
+  - qa_analyst
+
+termination_conditions:
+  - status: blocked
+  - status: requires revision
+  - status: completed
