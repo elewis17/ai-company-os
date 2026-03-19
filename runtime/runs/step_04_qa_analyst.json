@@ -1,0 +1,50 @@
+{
+  "agent": "qa_analyst",
+  "status": "requires revision",
+  "workflow_outcome": "continue",
+  "execution_mode": "review",
+  "summary": "Reject: The process_change handoff documentation update is directionally correct but includes a formatting artifact and minor schema-alignment issues in the example. Require small, targeted fixes before approval.",
+  "completed_work": [
+    "Reviewed workflows/handoff_standard.md changes against the workflow handoff standard and process_change routing preferences",
+    "Validated role ID usage and scope alignment",
+    "Identified formatting and example-schema inconsistencies"
+  ],
+  "artifacts_updated": [
+    "No repository artifacts updated in this stage"
+  ],
+  "decision_or_outcome": [
+    "Review Result: Reject",
+    "Risk Level: low",
+    "Merge Recommendation: Do not merge until required fixes are applied.",
+    "Findings: (1) A stray code fence and trailing characters (``` }],) appear at the end of the file after the Guidance for process_change section, breaking markdown formatting. (2) The Process Change Handoff Example omits artifacts_updated, which the standard requires in every handoff; for no repo changes it should be [\"No repository artifacts updated in this stage\"]. (3) The example includes both next_required_action (top-level) and handoff.next_required_action with different texts, which invites ambiguity; they should be identical to reflect the single next action for the next owner.",
+    "Suggestions (non-blocking): (a) In the legacy Handoff Template, add a space in the heading (## Handoff) and include 'completed' in Status options to match the standard. (b) Consider an inline note clarifying that in JSON payloads next_owner lives under the handoff object to avoid confusion with earlier narrative sections."
+  ],
+  "next_required_action": "Apply the required fixes to workflows/handoff_standard.md and resubmit for QA review.",
+  "blockers_or_risks": [
+    "Minor documentation inconsistencies could cause confusion in future handoffs if not corrected."
+  ],
+  "implementation_plan": {
+    "goal": "Ensure the handoff standard update for process_change is accurate, schema-aligned, and cleanly formatted.",
+    "issue_body": "Fix formatting artifact and align the example payload with the standard.",
+    "recommended_first_changes": [
+      "Remove the stray trailing code block and characters after the 'Guidance for process_change' section.",
+      "Update the Process Change Handoff Example to include artifacts_updated: [\"No repository artifacts updated in this stage\"].",
+      "Make the values of next_required_action (top-level) and handoff.next_required_action identical."
+    ],
+    "notes": [
+      "Keep the change minimal; do not alter unrelated sections.",
+      "Do not modify allowed role IDs or routing guidance."
+    ]
+  },
+  "file_operations": [],
+  "handoff": {
+    "next_owner": "software_engineer",
+    "next_required_action": "Fix the formatting artifact and align the JSON example with the standard per Required Fixes, then resubmit for QA review."
+  },
+  "debug": {
+    "instructions_loaded": true,
+    "retrieved_file_count": 1,
+    "context_mode": "review_bundle",
+    "artifact_bundle_file": "runtime/runs/context_bundle_qa_analyst.json"
+  }
+}

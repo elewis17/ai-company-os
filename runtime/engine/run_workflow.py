@@ -38,6 +38,39 @@ def get_termination_statuses(workflow: dict) -> set[str]:
     return statuses
 
 
+def build_changed_files_artifact(file_operations: List[dict]) -> dict:
+    files = []
+
+    for op in file_operations:
+        path = op.get("path")
+        action = op.get("action")
+
+        if not path:
+            continue
+
+        path_obj = Path(path)
+
+        content = None
+        if path_obj.exists() and path_obj.is_file():
+            try:
+                content = path_obj.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                content = path_obj.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                content = None
+
+        files.append(
+            {
+                "path": path,
+                "action": action,
+                "exists": path_obj.exists(),
+                "content": content,
+            }
+        )
+
+    return {"files": files}
+
+
 def run_workflow(task: dict) -> None:
     workflow_name = task.get("workflow", "feature_development")
     workflow = load_workflow(workflow_name)
@@ -68,7 +101,6 @@ def run_workflow(task: dict) -> None:
             previous_output=previous_output,
         )
 
-        # Execute file operations if provided
         file_operations = result.get("file_operations", [])
         execution_results = []
 
@@ -76,6 +108,15 @@ def run_workflow(task: dict) -> None:
             print(f"Applying {len(file_operations)} file operation(s)...")
             execution_results = apply_file_operations(file_operations)
             result["execution_results"] = execution_results
+
+            artifact_bundle = build_changed_files_artifact(file_operations)
+            artifact_path = runs_dir / f"step_{step:02d}_artifacts.json"
+            save_json(artifact_path, artifact_bundle)
+
+            result["artifact_bundle_file"] = str(artifact_path)
+            result["artifact_bundle"] = artifact_bundle
+
+            print(f"Artifacts saved: {artifact_path}")
             print("File operations applied.")
 
         step_file = runs_dir / f"step_{step:02d}_{current_role}.json"
