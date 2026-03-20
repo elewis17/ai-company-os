@@ -68,6 +68,48 @@ def _extract_changed_paths(previous_output: Optional[Dict[str, Any]]) -> List[st
     return deduped
 
 
+def _extract_qa_issues(previous_output: Optional[Dict[str, Any]]) -> List[str]:
+    if not previous_output:
+        return []
+
+    issues: List[str] = []
+
+    for item in previous_output.get("blockers_or_risks", []) or []:
+        if isinstance(item, str) and item.strip():
+            issues.append(item.strip())
+
+    for item in previous_output.get("decision_or_outcome", []) or []:
+        if isinstance(item, str) and item.strip():
+            text = item.strip()
+            lowered = text.lower()
+            if any(
+                marker in lowered
+                for marker in [
+                    "fail",
+                    "failed",
+                    "failing",
+                    "missing",
+                    "incorrect",
+                    "issue",
+                    "problem",
+                    "gap",
+                    "needs revision",
+                    "does not",
+                    "not",
+                ]
+            ):
+                issues.append(text)
+
+    seen: Set[str] = set()
+    deduped: List[str] = []
+    for issue in issues:
+        if issue not in seen:
+            seen.add(issue)
+            deduped.append(issue)
+
+    return deduped
+
+
 def _build_changed_files_bundle(previous_output: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     changed_paths = _extract_changed_paths(previous_output)
 
@@ -151,6 +193,7 @@ def _build_context_mode(
             )
 
         bundle = {
+            "qa_issues": _extract_qa_issues(previous_output),
             "target_paths": deduped_paths[:10],
             "files": files,
         }
@@ -159,7 +202,8 @@ def _build_context_mode(
         return {
             "mode": "targeted_file",
             "description": (
-                "Use targeted file contents for implementation. Focus on files most likely to be edited."
+                "Use targeted file contents for implementation. Focus on files most likely to be edited. "
+                "If QA issues are present from the previous step, prioritize fixing those issues with minimal changes."
             ),
             "artifact_bundle_file": artifact_file,
             "artifact_bundle": bundle,
@@ -209,6 +253,19 @@ Artifact Bundle File: {context_mode["artifact_bundle_file"]}
 
 ARTIFACT BUNDLE
 {_safe_json_dumps(context_mode["artifact_bundle"])}
+"""
+
+    qa_fix_context = ""
+    if agent_name == "software_engineer":
+        qa_issues = _extract_qa_issues(previous_output)
+        if qa_issues:
+            qa_fix_context = f"""
+
+QA FIX PRIORITY
+The previous step surfaced concrete QA issues. You must address these first with minimal, surgical changes.
+
+QA ISSUES
+{_safe_json_dumps(qa_issues)}
 """
 
     agent_output_schema = {
@@ -400,6 +457,7 @@ RETRIEVED KNOWLEDGE
 
 {previous_context}
 {artifact_context}
+{qa_fix_context}
 
 You must follow the company's workflow handoff standard.
 
@@ -497,6 +555,11 @@ Rules:
 20. If you are software_engineer and targeted files are present:
     - use those files as your main implementation context
     - keep edits narrowly scoped to the stated objective
+
+21. If you are software_engineer and QA issues are present from the previous step:
+    - treat those QA issues as the highest priority
+    - make the smallest change set needed to fix them
+    - do not broaden scope unless a QA issue explicitly requires it
 
 Return only schema-compliant JSON.
 """

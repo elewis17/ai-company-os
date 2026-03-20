@@ -11,5 +11,4 @@ allowed_roles:
 
 termination_conditions:
   - status: blocked
-  - status: requires revision
   - status: completed

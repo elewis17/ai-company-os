@@ -71,7 +71,11 @@ def build_changed_files_artifact(file_operations: List[dict]) -> dict:
     return {"files": files}
 
 
-def run_workflow(task: dict) -> None:
+def run_workflow(
+    task: dict,
+    start_role_override: str = None,
+    max_steps_override: int = None,
+) -> None:
     workflow_name = task.get("workflow", "feature_development")
     workflow = load_workflow(workflow_name)
 
@@ -86,11 +90,12 @@ def run_workflow(task: dict) -> None:
 
     save_json(runs_dir / "current_task.json", task)
 
-    current_role = start_role
+    current_role = start_role_override or start_role
     previous_output = None
     transition_counts: Dict[Tuple[str, str], int] = {}
+    max_steps = max_steps_override or MAX_WORKFLOW_STEPS
 
-    for step in range(1, MAX_WORKFLOW_STEPS + 1):
+    for step in range(1, max_steps + 1):
         validate_role(current_role, workflow_name, allowed_roles)
 
         print(f"\nRunning step {step}: {current_role}")
@@ -147,7 +152,14 @@ def run_workflow(task: dict) -> None:
             print(f"\nWorkflow stopped with terminal status: {status}")
             return
 
-        if status not in ["ready for next stage", "requires revision"]:
+        if status == "requires revision":
+            print(
+                f"\nRevision requested by {current_role}. "
+                "Returning control to run_agent for bounded retry handling."
+            )
+            return
+
+        if status != "ready for next stage":
             raise ValueError(
                 f"Unsupported status returned at step {step}: {status}"
             )
@@ -159,7 +171,7 @@ def run_workflow(task: dict) -> None:
 
         validate_role(next_owner, workflow_name, allowed_roles)
 
-        if status == "ready for next stage" and next_owner == current_role:
+        if next_owner == current_role:
             raise RuntimeError(
                 f"Invalid self-handoff at step {step}: "
                 f"'{current_role}' cannot hand off to itself while continuing."
@@ -174,16 +186,10 @@ def run_workflow(task: dict) -> None:
                 f"This usually means the handoff chain is looping."
             )
 
-        if status == "requires revision":
-            print(
-                f"\nRevision requested by {current_role}. "
-                f"Routing to {next_owner} for corrective action."
-            )
-
         previous_output = result
         current_role = next_owner
 
     raise RuntimeError(
-        f"Workflow exceeded max step limit of {MAX_WORKFLOW_STEPS}. "
+        f"Workflow exceeded max step limit of {max_steps}. "
         "This usually means no agent is declaring completion or the handoff chain is looping."
     )

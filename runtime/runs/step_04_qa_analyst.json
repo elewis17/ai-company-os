@@ -3,43 +3,40 @@
   "status": "requires revision",
   "workflow_outcome": "continue",
   "execution_mode": "review",
-  "summary": "Reject: The process_change handoff documentation update is directionally correct but includes a formatting artifact and minor schema-alignment issues in the example. Require small, targeted fixes before approval.",
+  "summary": "Review Result: Reject\n\nSummary: The retry-loop test plan is thorough and mostly clear, but it contains trailing non-markdown artifacts in the file and a few concrete ambiguities/inconsistencies in the observability contract and deadline semantics that must be resolved before approval.\n\nFindings:\n- Trailing non-markdown noise: After \"End of document.\" the file contains repeated non-markdown characters (e.g., `'}],` sequences). This violates documentation cleanliness and may break parsers.\n- Log schema gap vs. expectations: Case 5 expects a way to indicate an interrupted sleep (\"before_sleep(200) [interrupted]\") but the defined schema has no field/event to represent interruption. There is no \"sleep_interrupted\" event nor an \"interrupted\" flag.\n- Deadline semantics ambiguity: Terminal conditions say \"deadline reached or would be exceeded before next attempt\" while Case 6 terminates prior to starting the next sleep. Clarify the exact check point (before starting any sleep vs. before scheduling next attempt) and behavior if a deadline elapses during a sleep.\n- loop_terminated.attempt semantics unclear: The schema includes an \"attempt\" field for all log entries, but the doc does not define what value \"attempt\" should carry on loop_terminated. Examples show values but no rule (e.g., should it equal the last attempted index?).\n- Missing edge case coverage: No test for immediate cancellation before the first attempt begins; no test for deadline expiring during sleep (if deadlines are intended to interrupt sleeps).\n- Minor ambiguity in metric examples: Some expectations use `{...}` ellipses; for a deterministic spec, each test should list the full label set at least once to avoid ambiguity.\n\nRequired Fixes:\n1) Remove all trailing non-markdown artifacts and ensure the file ends cleanly after the final line (single newline OK).\n2) Define and align the log schema with interrupted-sleep behavior for Case 5:\n   - Option A: Add a new event, e.g., \"sleep_interrupted\" with fields {ts_ms, op, attempt, delay_ms, reason}.\n   - Option B: Add an \"interrupted\" boolean to the existing before_sleep event and show it in the examples.\n   Update Case 5 expected logs to match the chosen schema.\n3) Clarify and standardize deadline semantics:\n   - Explicitly state the check order and timing: e.g., \"Before initiating each sleep, compute remaining budget; if remaining < next delay, terminate with reason=deadline without starting the sleep.\"\n   - Specify whether sleeps are interruptible by deadline. If yes, add a test case for deadline during sleep with expected logs/metrics. If no, state that sleeps are not interrupted by deadline (only by cancellation) and justify briefly.\n4) Specify loop_terminated.attempt semantics: e.g., \"attempt equals the last attempt index executed.\" Ensure all examples reflect this rule.\n5) Add edge-case tests:\n   - Immediate cancellation before attempt 1 starts (Attempts=0, Sleeps=0, termination=canceled; metrics/logs consistent).\n   - Deadline during sleep (if deadlines are interruptible), with precise expected timeline, logs, and termination reason.\n6) Replace ellipses in metric expectations with full label sets (op, outcome, error_kind/reason) in each test case, or define a clear convention stating that omitted labels are constant (and show at least one full example per case).\n\nRisk Level: medium\n\nMerge recommendation: Do not approve until the above fixes are applied.",
   "completed_work": [
-    "Reviewed workflows/handoff_standard.md changes against the workflow handoff standard and process_change routing preferences",
-    "Validated role ID usage and scope alignment",
-    "Identified formatting and example-schema inconsistencies"
+    "Reviewed runtime/test_retry_loop.md against QA quality standards",
+    "Identified trailing non-markdown artifacts appended to the document",
+    "Flagged inconsistency between log schema and interrupted-sleep expectation",
+    "Noted ambiguities in deadline timing and loop_terminated attempt semantics",
+    "Outlined concrete required fixes and additional edge-case tests"
   ],
   "artifacts_updated": [
     "No repository artifacts updated in this stage"
   ],
   "decision_or_outcome": [
-    "Review Result: Reject",
-    "Risk Level: low",
-    "Merge Recommendation: Do not merge until required fixes are applied.",
-    "Findings: (1) A stray code fence and trailing characters (``` }],) appear at the end of the file after the Guidance for process_change section, breaking markdown formatting. (2) The Process Change Handoff Example omits artifacts_updated, which the standard requires in every handoff; for no repo changes it should be [\"No repository artifacts updated in this stage\"]. (3) The example includes both next_required_action (top-level) and handoff.next_required_action with different texts, which invites ambiguity; they should be identical to reflect the single next action for the next owner.",
-    "Suggestions (non-blocking): (a) In the legacy Handoff Template, add a space in the heading (## Handoff) and include 'completed' in Status options to match the standard. (b) Consider an inline note clarifying that in JSON payloads next_owner lives under the handoff object to avoid confusion with earlier narrative sections."
+    "Reject pending fixes",
+    "Feedback provided to resolve observability and timing ambiguities and to clean the file content"
   ],
-  "next_required_action": "Apply the required fixes to workflows/handoff_standard.md and resubmit for QA review.",
+  "next_required_action": "Software engineer: apply the required fixes to runtime/test_retry_loop.md and resubmit for QA review.",
   "blockers_or_risks": [
-    "Minor documentation inconsistencies could cause confusion in future handoffs if not corrected."
+    "Trailing non-markdown content can break downstream documentation tooling and creates confusion",
+    "Ambiguous observability/timing rules could lead to flaky or mis-specified tests"
   ],
   "implementation_plan": {
-    "goal": "Ensure the handoff standard update for process_change is accurate, schema-aligned, and cleanly formatted.",
-    "issue_body": "Fix formatting artifact and align the example payload with the standard.",
+    "goal": "N/A (QA review only)",
+    "issue_body": "N/A",
     "recommended_first_changes": [
-      "Remove the stray trailing code block and characters after the 'Guidance for process_change' section.",
-      "Update the Process Change Handoff Example to include artifacts_updated: [\"No repository artifacts updated in this stage\"].",
-      "Make the values of next_required_action (top-level) and handoff.next_required_action identical."
+      "N/A"
     ],
     "notes": [
-      "Keep the change minimal; do not alter unrelated sections.",
-      "Do not modify allowed role IDs or routing guidance."
+      "N/A"
     ]
   },
   "file_operations": [],
   "handoff": {
     "next_owner": "software_engineer",
-    "next_required_action": "Fix the formatting artifact and align the JSON example with the standard per Required Fixes, then resubmit for QA review."
+    "next_required_action": "Address the Required Fixes in runtime/test_retry_loop.md and resubmit for QA."
   },
   "debug": {
     "instructions_loaded": true,

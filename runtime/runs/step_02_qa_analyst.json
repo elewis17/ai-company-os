@@ -1,39 +1,40 @@
 {
   "agent": "qa_analyst",
-  "status": "completed",
-  "workflow_outcome": "completed",
+  "status": "requires revision",
+  "workflow_outcome": "continue",
   "execution_mode": "review",
-  "summary": "Approved: Required fixes applied. The handoff standard file is now cleanly formatted and the example payload aligns with the schema. Minor non-blocking improvements remain for the template/clarity.",
+  "summary": "Review Result: Reject\n\nSummary: Most previously raised issues are addressed (schema clarified, deadline semantics standardized, edge cases added, labels made explicit). However, the document still contains trailing non-markdown artifacts at EOF, which must be removed before approval. One minor clarity gap remains around the emission timing of the before_sleep log event when using the interrupted flag.\n\nFindings:\n- Trailing non-markdown noise persists: The file ends with the literal characters \"'}],\" after the line \"File ends cleanly.\" This violates documentation cleanliness and may break parsers.\n- Minor clarity gap: The observability schema uses a single before_sleep event with an interrupted flag. The document does not explicitly state whether before_sleep is emitted immediately before the sleep begins or at the moment the sleep ends (normal wake vs. cancellation). Using interrupted implies post-sleep emission; the spec should state this unambiguously.\n\nRequired Fixes:\n1) Remove all trailing non-markdown artifacts and ensure the file ends cleanly after the final line (a single newline is acceptable).\n2) Clarify the before_sleep emission timing. Recommended wording: \"before_sleep is emitted when the sleep completes or is interrupted; delay_ms is the scheduled delay; interrupted indicates whether termination was due to cancellation. No separate start-of-sleep log is emitted.\" Ensure Case 5 remains consistent with this rule.\n\nRisk Level: low (doc cleanliness) to medium (observability ambiguity could cause mismatched log expectations).",
   "completed_work": [
-    "Reviewed workflows/handoff_standard.md against prior QA findings",
-    "Verified stray trailing code fence/artifact is removed",
-    "Confirmed example includes artifacts_updated with the correct no-change value",
-    "Confirmed next_required_action is aligned at top-level and within handoff",
-    "Checked overall consistency and clarity; noted minor non-blocking suggestions"
+    "Reviewed runtime/test_retry_loop.md against prior QA findings and standards",
+    "Verified updated schema, deadline semantics, edge cases, and label completeness",
+    "Identified residual trailing artifact and minor observability timing ambiguity"
   ],
   "artifacts_updated": [
     "No repository artifacts updated in this stage"
   ],
   "decision_or_outcome": [
-    "Review Result: Approve",
-    "Summary: The targeted fixes are correctly applied; the document is schema-aligned and free of the previous formatting artifact.",
-    "Findings: No blocking issues remain. Minor suggestions: (1) In the Handoff Template, change '##Handoff' to '## Handoff' for proper heading formatting; (2) Add 'completed' to the Status line in the template to match the standard; (3) Consider an inline note in the checklist clarifying that next_owner lives under the 'handoff' object in JSON payloads to avoid ambiguity.",
-    "Required Fixes: None (non-blocking suggestions only).",
-    "Risk Level: low",
-    "Merge Recommendation: Approve and merge."
+    "Reject pending cleanup and minor clarification",
+    "Most substantive issues from prior review are resolved"
   ],
-  "next_required_action": "No further action required",
-  "blockers_or_risks": [],
+  "next_required_action": "Software engineer: apply the required fixes to runtime/test_retry_loop.md and resubmit for QA review.",
+  "blockers_or_risks": [
+    "Trailing non-markdown content can break downstream documentation tooling and parsing",
+    "Ambiguous before_sleep emission timing could lead to inconsistent or flaky log-based assertions"
+  ],
   "implementation_plan": {
-    "goal": "N/A",
+    "goal": "N/A (QA review only)",
     "issue_body": "N/A",
-    "recommended_first_changes": [],
-    "notes": []
+    "recommended_first_changes": [
+      "N/A"
+    ],
+    "notes": [
+      "N/A"
+    ]
   },
   "file_operations": [],
   "handoff": {
-    "next_owner": "qa_analyst",
-    "next_required_action": "No further action required"
+    "next_owner": "software_engineer",
+    "next_required_action": "Remove trailing non-markdown artifacts and clarify before_sleep emission timing as specified, then resubmit for QA."
   },
   "debug": {
     "instructions_loaded": true,
