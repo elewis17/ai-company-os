@@ -1,12 +1,24 @@
 from __future__ import annotations
 
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
+OS_REPO_ROOT = Path(__file__).resolve().parents[2]
 
-BASE = Path(__file__).resolve().parents[2]
+
+def _resolve_target_repo_root() -> Path:
+    configured_root = os.environ.get("LEASE_LENS_REPO_ROOT") or os.environ.get("TARGET_REPO_ROOT")
+    base = Path(configured_root).expanduser().resolve() if configured_root else OS_REPO_ROOT
+
+    if not base.exists() or not base.is_dir():
+        raise ValueError(f"Configured repository root is invalid: {base}")
+
+    return base
+
+BASE = _resolve_target_repo_root()
 
 
 @dataclass

@@ -24,5 +24,6 @@ jobs:
       - name: Run coding agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LEASE_LENS_REPO_ROOT: .
         run: |
           python scripts/run_agent.py "${{ github.event.issue.title }}" "${{ github.event.issue.body }}"
