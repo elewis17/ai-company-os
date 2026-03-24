@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import ast
+import json
+import re
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from runtime.tools.repo_tools import (
@@ -12,6 +16,12 @@ from runtime.tools.repo_tools import (
 
 
 WRITE_ACTIONS = {"write_file", "append_file", "replace_in_file"}
+
+SUSPICIOUS_TRAILING_PATTERNS = (
+    r"```[\s\r\n]*[\]\}\),]+[\s\r\n,]*$",
+    r"[\]\}]{1,2},\s*$",
+    r"[\]\}]{1,2},\s*['\"]\s*$",
+)
 
 
 def _validate_file_operations(file_operations: List[Dict[str, Any]]) -> None:
@@ -65,6 +75,119 @@ def _normalize_text(value: Any) -> str:
     return str(value).replace("\r\n", "\n").strip()
 
 
+def _count_lines(text: str) -> int:
+    if not text:
+        return 0
+    return text.count("\n") + 1
+
+
+def _changed_line_count(before: str, after: str) -> int:
+    before_lines = before.splitlines()
+    after_lines = after.splitlines()
+    max_len = max(len(before_lines), len(after_lines))
+    changed = 0
+
+    for idx in range(max_len):
+        old_line = before_lines[idx] if idx < len(before_lines) else None
+        new_line = after_lines[idx] if idx < len(after_lines) else None
+        if old_line != new_line:
+            changed += 1
+
+    return changed
+
+
+def _reject_suspicious_trailing_artifacts(path: str, content: str) -> None:
+    stripped = content.rstrip()
+
+    for pattern in SUSPICIOUS_TRAILING_PATTERNS:
+        if re.search(pattern, stripped):
+            raise ValueError(
+                f"Generated content for '{path}' appears malformed or has trailing artifact residue."
+            )
+
+    suspicious_phrases = (
+        "Return only schema-compliant JSON",
+        "You are executing the role",
+        '"file_operations"',
+        '"action"',
+        '"path"',
+    )
+
+    for phrase in suspicious_phrases:
+        if phrase in content:
+            raise ValueError(
+                f"Generated content for '{path}' appears to contain prompt/schema leakage."
+            )
+
+
+def _validate_markdown_content(path: str, content: str) -> None:
+    _reject_suspicious_trailing_artifacts(path, content)
+
+    fence_count = content.count("```")
+    if fence_count % 2 != 0:
+        raise ValueError(f"Markdown validation failed for '{path}': unbalanced code fences.")
+
+
+def _validate_json_content(path: str, content: str) -> None:
+    _reject_suspicious_trailing_artifacts(path, content)
+
+    try:
+        json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"JSON validation failed for '{path}': {exc}") from exc
+
+
+def _validate_python_content(path: str, content: str) -> None:
+    _reject_suspicious_trailing_artifacts(path, content)
+
+    try:
+        ast.parse(content)
+    except SyntaxError as exc:
+        raise ValueError(f"Python validation failed for '{path}': {exc}") from exc
+
+
+def _validate_text_content(path: str, content: str) -> None:
+    _reject_suspicious_trailing_artifacts(path, content)
+
+
+def _validate_candidate_file(path: str, content: str) -> None:
+    suffix = Path(path).suffix.lower()
+
+    if suffix == ".json":
+        _validate_json_content(path, content)
+    elif suffix == ".py":
+        _validate_python_content(path, content)
+    elif suffix in {".md", ".markdown"}:
+        _validate_markdown_content(path, content)
+    else:
+        _validate_text_content(path, content)
+
+
+def _validate_diff_budget(path: str, before: str, after: str, action: str) -> None:
+    if action == "write_file":
+        return
+
+    changed_lines = _changed_line_count(before, after)
+    before_line_count = _count_lines(before)
+    after_line_count = _count_lines(after)
+    max_line_count = max(before_line_count, after_line_count)
+
+    if max_line_count == 0:
+        return
+
+    if changed_lines > 200:
+        raise ValueError(
+            f"Change to '{path}' is too large for a single {action} operation "
+            f"({changed_lines} changed lines)."
+        )
+
+    if before_line_count > 0 and changed_lines > max(50, int(before_line_count * 0.8)):
+        raise ValueError(
+            f"Change to '{path}' appears too broad for {action} "
+            f"({changed_lines}/{before_line_count} lines changed)."
+        )
+
+
 def _validate_operation_payload(op: Dict[str, Any]) -> None:
     action = op.get("action")
     path = op.get("path")
@@ -73,6 +196,9 @@ def _validate_operation_payload(op: Dict[str, Any]) -> None:
         content = op.get("content")
         if content is None:
             raise ValueError(f"write_file requires 'content' for '{path}'")
+
+        candidate = str(content)
+        _validate_candidate_file(path, candidate)
 
     elif action == "append_file":
         content = op.get("content")
@@ -87,6 +213,10 @@ def _validate_operation_payload(op: Dict[str, Any]) -> None:
             raise ValueError(
                 f"append_file for '{path}' appears to duplicate content already present in the file."
             )
+
+        candidate = existing_content + str(content)
+        _validate_candidate_file(path, candidate)
+        _validate_diff_budget(path, existing_content, candidate, action)
 
     elif action == "replace_in_file":
         old = op.get("old")
@@ -103,10 +233,23 @@ def _validate_operation_payload(op: Dict[str, Any]) -> None:
                 f"replace_in_file cannot run because '{path}' does not exist."
             )
 
-        if str(old) not in existing_content:
+        old_text = str(old)
+        new_text = str(new)
+
+        match_count = existing_content.count(old_text)
+        if match_count == 0:
             raise ValueError(
                 f"replace_in_file could not find the target text in '{path}'."
             )
+        if match_count > 1:
+            raise ValueError(
+                f"replace_in_file matched the target text {match_count} times in '{path}'. "
+                "Expected exactly one match."
+            )
+
+        candidate = existing_content.replace(old_text, new_text, 1)
+        _validate_candidate_file(path, candidate)
+        _validate_diff_budget(path, existing_content, candidate, action)
 
 
 def apply_file_operations(file_operations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

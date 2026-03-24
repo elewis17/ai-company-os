@@ -1,11 +1,25 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
 
-BASE = Path(__file__).resolve().parents[2]
+OS_REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _resolve_target_repo_root() -> Path:
+    configured_root = os.environ.get("LEASE_LENS_REPO_ROOT") or os.environ.get("TARGET_REPO_ROOT")
+    base = Path(configured_root).expanduser().resolve() if configured_root else OS_REPO_ROOT
+
+    if not base.exists() or not base.is_dir():
+        raise ValueError(f"Configured repository root is invalid: {base}")
+
+    return base
+
+
+BASE = _resolve_target_repo_root()
 
 
 @dataclass
@@ -70,8 +84,14 @@ def replace_in_file(relative_path: str, old: str, new: str) -> FileOperationResu
 
     content = path.read_text(encoding="utf-8")
 
-    if old not in content:
+    match_count = content.count(old)
+    if match_count == 0:
         raise ValueError(f"Target text not found in file: {relative_path}")
+    if match_count > 1:
+        raise ValueError(
+            f"Target text matched {match_count} times in file: {relative_path}. "
+            "replace_in_file requires exactly one match."
+        )
 
     updated = content.replace(old, new, 1)
     path.write_text(updated, encoding="utf-8")

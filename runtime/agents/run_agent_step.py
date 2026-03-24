@@ -11,6 +11,7 @@ client = OpenAI()
 
 RUNS_DIR = Path("runtime/runs")
 MAX_INLINE_FILE_CHARS = 120000
+IMPLEMENTATION_ROLE = "software_engineer"
 
 
 def _safe_json_dumps(value: Any) -> str:
@@ -157,7 +158,7 @@ def _build_context_mode(
             "artifact_bundle": bundle,
         }
 
-    if agent_name == "software_engineer":
+    if agent_name == IMPLEMENTATION_ROLE:
         target_paths: List[str] = []
 
         if previous_output:
@@ -219,6 +220,76 @@ def _build_context_mode(
     }
 
 
+FILE_OPERATION_SCHEMA: Dict[str, Any] = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "action": {
+                "type": "string",
+                "enum": ["write_file", "append_file", "replace_in_file"],
+            },
+            "path": {
+                "type": "string",
+            },
+            "content": {
+                "type": ["string", "null"],
+            },
+            "old": {
+                "type": ["string", "null"],
+            },
+            "new": {
+                "type": ["string", "null"],
+            },
+        },
+        "required": ["action", "path", "content", "old", "new"],
+    },
+}
+
+
+def _default_non_implementation_mode(agent_name: str) -> str:
+    if agent_name == "qa_analyst":
+        return "review"
+    return "planning"
+
+
+def _enforce_role_execution_rules(agent_name: str, result: Dict[str, Any]) -> Dict[str, Any]:
+    if agent_name == IMPLEMENTATION_ROLE:
+        return result
+
+    file_operations = result.get("file_operations") or []
+    if not file_operations:
+        if result.get("execution_mode") == "implementation":
+            result["execution_mode"] = _default_non_implementation_mode(agent_name)
+        return result
+
+    result["file_operations"] = []
+    result["execution_mode"] = _default_non_implementation_mode(agent_name)
+    result["artifacts_updated"] = ["No repository artifacts updated in this stage"]
+
+    completed_work = result.get("completed_work") or []
+    result["completed_work"] = [
+        item
+        for item in completed_work
+        if "file" not in item.lower() and "write" not in item.lower()
+    ]
+
+    decision_or_outcome = result.get("decision_or_outcome") or []
+    decision_or_outcome.append(
+        f"Non-implementation role '{agent_name}' proposed file operations; they were removed by runtime role enforcement."
+    )
+    result["decision_or_outcome"] = decision_or_outcome
+
+    blockers_or_risks = result.get("blockers_or_risks") or []
+    blockers_or_risks.append(
+        f"Role boundary violation prevented: '{agent_name}' attempted repository mutation."
+    )
+    result["blockers_or_risks"] = blockers_or_risks
+
+    return result
+
+
 def run_agent_step(
     agent_name: str,
     task: Dict[str, Any],
@@ -256,7 +327,7 @@ ARTIFACT BUNDLE
 """
 
     qa_fix_context = ""
-    if agent_name == "software_engineer":
+    if agent_name == IMPLEMENTATION_ROLE:
         qa_issues = _extract_qa_issues(previous_output)
         if qa_issues:
             qa_fix_context = f"""
@@ -352,36 +423,7 @@ QA ISSUES
                         "notes",
                     ],
                 },
-                "file_operations": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "additionalProperties": False,
-                        "properties": {
-                            "action": {
-                                "type": "string",
-                                "enum": [
-                                    "write_file",
-                                    "append_file",
-                                    "replace_in_file",
-                                ],
-                            },
-                            "path": {
-                                "type": "string",
-                            },
-                            "content": {
-                                "type": ["string", "null"],
-                            },
-                            "old": {
-                                "type": ["string", "null"],
-                            },
-                            "new": {
-                                "type": ["string", "null"],
-                            },
-                        },
-                        "required": ["action", "path", "content", "old", "new"],
-                    },
-                },
+                "file_operations": FILE_OPERATION_SCHEMA,
                 "handoff": {
                     "type": "object",
                     "additionalProperties": False,
@@ -490,76 +532,115 @@ Rules:
 
 5. Do not claim repository files were changed unless you are also returning the exact file_operations needed to make those changes.
 
-6. If no repository changes are being proposed in this step:
+6. Only {IMPLEMENTATION_ROLE} may return non-empty file_operations.
+   All other roles must return file_operations = [].
+
+7. Only {IMPLEMENTATION_ROLE} may use execution_mode = "implementation".
+   - technical_architect must use "planning"
+   - project_manager must use "planning"
+   - product_manager must use "planning"
+   - qa_analyst must use "review"
+   - software_engineer may use "implementation" when making repository changes
+
+8. If you are not {IMPLEMENTATION_ROLE}:
+   - do not return file operations
+   - do not describe code or file changes as completed
+   - hand off implementation work to {IMPLEMENTATION_ROLE} when repository changes are needed
+
+9. If no repository changes are being proposed in this step:
    - execution_mode must be "planning" or "review"
    - file_operations must be []
    - artifacts_updated must be ["No repository artifacts updated in this stage"]
 
-7. If you are software_engineer and the task is concrete enough to implement with the available file operations,
-   you MUST switch to execution_mode = "implementation" and return the exact file_operations needed.
-   Do not keep re-planning the same work.
+10. If you are {IMPLEMENTATION_ROLE} and the task is concrete enough to implement with the available file operations,
+    you MUST switch to execution_mode = "implementation" and return the exact file_operations needed.
+    Do not keep re-planning the same work.
 
-8. If you return file_operations:
-   - execution_mode must be "implementation"
-   - artifacts_updated must list the exact target file paths
-   - completed_work must describe the actual changes being applied
-   - do not say a PR was opened, merged, or tests were run unless explicit executed tool results were provided
+11. If you return file_operations:
+    - execution_mode must be "implementation"
+    - artifacts_updated must list the exact target file paths
+    - completed_work must describe the actual changes being applied
+    - do not say a PR was opened, merged, or tests were run unless explicit executed tool results were provided
 
-9. If the task is fully complete for the current workflow objective, set:
-   - status = "completed"
-   - workflow_outcome = "completed"
-   - handoff.next_owner = "{agent_name}"
-   - handoff.next_required_action = "No further action required"
-   - next_required_action = "No further action required"
+12. If the task is fully complete for the current workflow objective, set:
+    - status = "completed"
+    - workflow_outcome = "completed"
+    - handoff.next_owner = "{agent_name}"
+    - handoff.next_required_action = "No further action required"
+    - next_required_action = "No further action required"
 
-10. If the workflow cannot proceed because of a blocker, set:
-   - status = "blocked"
-   - workflow_outcome = "blocked"
+13. If the workflow cannot proceed because of a blocker, set:
+    - status = "blocked"
+    - workflow_outcome = "blocked"
 
-11. If work should continue, set:
-   - status = "ready for next stage"
-   - workflow_outcome = "continue"
+14. If work should continue, set:
+    - status = "ready for next stage"
+    - workflow_outcome = "continue"
 
-12. Do NOT create follow-up work inside the same workflow.
+15. Do NOT create follow-up work inside the same workflow.
     If follow-up work is needed, mention it in blockers_or_risks or decision_or_outcome,
     but still mark the current task completed if its original objective is done.
 
-13. If the workflow is "process_change", prefer routing among:
+16. If the workflow is "process_change", prefer routing among:
     technical_architect, project_manager, software_engineer, qa_analyst.
     Only route to product_manager if the task truly requires product-scope clarification.
 
-14. For process_change workflows, prefer minimal documentation/process changes.
+17. For process_change workflows, prefer minimal documentation/process changes.
     Do not assume application feature implementation is required unless the task explicitly says so.
 
-15. If status = "ready for next stage", handoff.next_owner must not be the same as the current agent.
+18. If status = "ready for next stage", handoff.next_owner must not be the same as the current agent.
     Self-handoffs are only allowed when the task is completed or blocked.
 
-16. If the work has already been fully planned and there is no new decision, review finding, or implementation to add,
+19. If the work has already been fully planned and there is no new decision, review finding, or implementation to add,
     mark the task "completed" instead of repeating the same handoff.
 
-17. For implementation tasks, keep changes minimal and precise.
+20. For implementation tasks, keep changes minimal and precise.
     Prefer one or a few exact file operations over broad speculative edits.
 
-18. Base your recommendations only on:
+21. Base your recommendations only on:
     - the task
     - retrieved knowledge
     - prior handoff if provided
     - artifact bundle contents if provided
     Clearly label assumptions as assumptions.
 
-19. If you are qa_analyst and an artifact bundle is present:
+22. If you are qa_analyst and an artifact bundle is present:
     - review the actual changed file contents in the bundle
     - verify whether the change satisfies the stated purpose from the previous step
     - block only for concrete gaps you can point to in the changed files
 
-20. If you are software_engineer and targeted files are present:
+23. If you are {IMPLEMENTATION_ROLE} and targeted files are present:
     - use those files as your main implementation context
     - keep edits narrowly scoped to the stated objective
 
-21. If you are software_engineer and QA issues are present from the previous step:
+24. If you are {IMPLEMENTATION_ROLE} and QA issues are present from the previous step:
     - treat those QA issues as the highest priority
     - make the smallest change set needed to fix them
     - do not broaden scope unless a QA issue explicitly requires it
+
+25. If you are {IMPLEMENTATION_ROLE}:
+    - return repository-ready file content only
+    - never include prompt text, schema text, commentary, or explanation inside file content unless the file itself truly requires it
+    - use write_file for new files or full-file rewrites
+    - use replace_in_file when you have an exact, stable target block to replace
+    - use append_file only when content truly belongs at the end of the file and there is no stable replacement anchor
+    - prefer the smallest safe change that fully resolves the task or QA issue
+
+26. File operation field rules:
+    - every file operation must include: action, path, content, old, new
+    - for write_file: set content to the final file text, and set old = null, new = null
+    - for append_file: set content to the appended file text, and set old = null, new = null
+    - for replace_in_file: set old and new to exact text values, and set content = null
+    - do not use empty-string placeholders for unused fields unless the file content itself is intentionally empty
+
+27. If you use replace_in_file:
+    - old must be the exact text to replace
+    - new must be the exact replacement text
+    - do not shorten old/new to summaries or partial hints
+
+28. If you use write_file or append_file:
+    - content must be final file content only
+    - do not wrap content in JSON, prose, or meta-instructions
 
 Return only schema-compliant JSON.
 """
@@ -577,7 +658,11 @@ Return only schema-compliant JSON.
                     "You are a precise role-based engineering agent. "
                     "Obey role boundaries, use only canonical role IDs, "
                     "do not fabricate execution, and when repository changes are concrete "
-                    "return exact file_operations for the runner to apply."
+                    "return exact file_operations for the runner to apply. "
+                    f"Only {IMPLEMENTATION_ROLE} may return non-empty file_operations or use execution_mode='implementation'. "
+                    "All other roles must plan, review, or hand off. "
+                    "For software_engineer tasks, return repository-ready file mutations only. "
+                    "Never leak prompt text, schema text, or commentary into file content."
                 ),
             },
             {
@@ -602,6 +687,7 @@ Return only schema-compliant JSON.
         raise ValueError("Agent returned empty content.")
 
     result = json.loads(content)
+    result = _enforce_role_execution_rules(agent_name, result)
 
     result["debug"]["context_mode"] = context_mode["mode"]
     result["debug"]["artifact_bundle_file"] = context_mode["artifact_bundle_file"]

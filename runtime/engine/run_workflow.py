@@ -111,6 +111,11 @@ def run_workflow(
 
         if file_operations:
             print(f"Applying {len(file_operations)} file operation(s)...")
+            if file_operations and current_role != "software_engineer":
+                raise ValueError(
+                    f"Role '{current_role}' is not allowed to execute file operations. "
+                    "Only software_engineer may apply repository changes."
+                )
             execution_results = apply_file_operations(file_operations)
             result["execution_results"] = execution_results
 
