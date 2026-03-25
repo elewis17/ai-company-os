@@ -198,32 +198,38 @@ def run_with_bounded_retry(task: dict) -> None:
     print("\nMax auto-retries reached. Stopping.")
 
 
-title = sys.argv[1]
-body = sys.argv[2] if len(sys.argv) > 2 else ""
+def build_task_from_issue(title: str, body: str) -> dict:
+    query = f"{title}\n{body}".strip()
 
-query = f"{title}\n{body}"
+    print("Running retriever...")
+    subprocess.run(["python", str(RETRIEVER), query], check=True)
 
-print("Running retriever...")
+    print("Loading retrieved files...")
+    with open(RETRIEVED, "r", encoding="utf-8") as f:
+        paths = json.load(f)
 
-subprocess.run(
-    ["python", str(RETRIEVER), query],
-    check=True
-)
+    workflow_name = select_workflow(paths)
 
-print("Loading retrieved files...")
+    task = {
+        "issue_title": title,
+        "issue_body": body,
+        "workflow": workflow_name,
+        "retrieved_files": paths,
+    }
 
-with open(RETRIEVED, "r", encoding="utf-8") as f:
-    paths = json.load(f)
+    return augment_task_with_memory(task)
 
-workflow_name = select_workflow(paths)
 
-task = {
-    "issue_title": title,
-    "issue_body": body,
-    "workflow": workflow_name,
-    "retrieved_files": paths,
-}
+def main() -> None:
+    if len(sys.argv) < 2:
+        raise SystemExit("Usage: python scripts/run_agent.py <issue_title> [issue_body]")
 
-task = augment_task_with_memory(task)
+    title = sys.argv[1]
+    body = sys.argv[2] if len(sys.argv) > 2 else ""
 
-run_with_bounded_retry(task)
+    task = build_task_from_issue(title, body)
+    run_with_bounded_retry(task)
+
+
+if __name__ == "__main__":
+    main()

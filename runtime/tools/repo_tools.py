@@ -6,20 +6,17 @@ from pathlib import Path
 from typing import List
 
 
-OS_REPO_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_BASE = Path(__file__).resolve().parents[2]
+_BASE_ENV_VAR = "LEASE_LENS_REPO_ROOT"
 
 
-def _resolve_target_repo_root() -> Path:
-    configured_root = os.environ.get("LEASE_LENS_REPO_ROOT") or os.environ.get("TARGET_REPO_ROOT")
-    base = Path(configured_root).expanduser().resolve() if configured_root else OS_REPO_ROOT
-
-    if not base.exists() or not base.is_dir():
-        raise ValueError(f"Configured repository root is invalid: {base}")
-
+def _get_repo_root() -> Path:
+    configured_root = os.environ.get(_BASE_ENV_VAR)
+    if configured_root:
+        base = Path(configured_root).expanduser().resolve()
+    else:
+        base = _DEFAULT_BASE.resolve()
     return base
-
-
-BASE = _resolve_target_repo_root()
 
 
 @dataclass
@@ -31,9 +28,10 @@ class FileOperationResult:
 
 
 def _resolve_repo_path(relative_path: str) -> Path:
-    path = (BASE / relative_path).resolve()
+    base = _get_repo_root()
+    path = (base / relative_path).resolve()
 
-    if not str(path).startswith(str(BASE)):
+    if not str(path).startswith(str(base)):
         raise ValueError(f"Path escapes repository root: {relative_path}")
 
     return path
@@ -84,14 +82,8 @@ def replace_in_file(relative_path: str, old: str, new: str) -> FileOperationResu
 
     content = path.read_text(encoding="utf-8")
 
-    match_count = content.count(old)
-    if match_count == 0:
+    if old not in content:
         raise ValueError(f"Target text not found in file: {relative_path}")
-    if match_count > 1:
-        raise ValueError(
-            f"Target text matched {match_count} times in file: {relative_path}. "
-            "replace_in_file requires exactly one match."
-        )
 
     updated = content.replace(old, new, 1)
     path.write_text(updated, encoding="utf-8")
@@ -110,10 +102,11 @@ def file_exists(relative_path: str) -> bool:
 
 
 def list_files(glob_pattern: str = "**/*") -> List[str]:
+    base = _get_repo_root()
     results: List[str] = []
 
-    for path in BASE.glob(glob_pattern):
+    for path in base.glob(glob_pattern):
         if path.is_file():
-            results.append(str(path.relative_to(BASE)))
+            results.append(str(path.relative_to(base)))
 
     return sorted(results)

@@ -6,19 +6,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-OS_REPO_ROOT = Path(__file__).resolve().parents[2]
+
+_DEFAULT_BASE = Path(__file__).resolve().parents[2]
+_BASE_ENV_VAR = "LEASE_LENS_REPO_ROOT"
 
 
-def _resolve_target_repo_root() -> Path:
-    configured_root = os.environ.get("LEASE_LENS_REPO_ROOT") or os.environ.get("TARGET_REPO_ROOT")
-    base = Path(configured_root).expanduser().resolve() if configured_root else OS_REPO_ROOT
-
-    if not base.exists() or not base.is_dir():
-        raise ValueError(f"Configured repository root is invalid: {base}")
-
+def _get_repo_root() -> Path:
+    configured_root = os.environ.get(_BASE_ENV_VAR)
+    if configured_root:
+        base = Path(configured_root).expanduser().resolve()
+    else:
+        base = _DEFAULT_BASE.resolve()
     return base
-
-BASE = _resolve_target_repo_root()
 
 
 @dataclass
@@ -31,9 +30,10 @@ class GitCommandResult:
 
 
 def _run_git_command(args: List[str], check: bool = True) -> GitCommandResult:
+    base = _get_repo_root()
     result = subprocess.run(
         ["git", *args],
-        cwd=BASE,
+        cwd=base,
         text=True,
         capture_output=True,
     )
