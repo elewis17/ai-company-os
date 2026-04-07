@@ -93,6 +93,28 @@ def _inject_explicit_target_files(retrieved_paths: List[dict], issue_metadata: D
     return retrieved_paths
 
 
+def _select_task_workflow(retrieved_paths: List[dict]) -> str:
+    target_repo_paths = [
+        str(item.get("path", "")).strip()
+        for item in retrieved_paths
+        if isinstance(item, dict) and item.get("purpose") == "target_repo_file"
+    ]
+
+    for path in target_repo_paths:
+        if (
+            path.startswith(("src/", "app/", "pages/", "components/", "features/", "public/", "tests/", "test/"))
+            or path.startswith(".github/")
+            or path in {"package.json", "package-lock.json"}
+            or path.startswith("tsconfig")
+            or path.startswith("vite.config.")
+            or path.startswith("tailwind.config.")
+            or path.startswith("eslint.config.")
+        ):
+            return "feature_development"
+
+    return select_workflow(retrieved_paths)
+
+
 def main() -> None:
     if len(sys.argv) < 2:
         raise SystemExit("Usage: python scripts/run_task_packet.py <task_dir>")
@@ -114,7 +136,7 @@ def main() -> None:
     task: Dict[str, Any] = {
         "issue_title": parsed["issue_title"],
         "issue_body": parsed["issue_body"],
-        "workflow": select_workflow(retrieved_paths),
+        "workflow": _select_task_workflow(retrieved_paths),
         "retrieved_files": retrieved_paths,
     }
 
@@ -126,7 +148,11 @@ def main() -> None:
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     (RUNS_DIR / "current_task.json").write_text(json.dumps(task, indent=2), encoding="utf-8")
 
-    print("Injected target repo paths:", [item["path"] for item in retrieved_paths if item.get("purpose") == "target_repo_file"])
+    print(
+        "Injected target repo paths:",
+        [item["path"] for item in retrieved_paths if item.get("purpose") == "target_repo_file"],
+    )
+    print("Selected workflow:", task["workflow"])
 
     run_with_bounded_retry(task)
 
