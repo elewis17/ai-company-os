@@ -28,19 +28,11 @@ def validate_role(role: str, workflow_name: str, allowed_roles: List[str]) -> No
 
 def get_termination_statuses(workflow: dict) -> set[str]:
     termination_conditions = workflow.get("termination_conditions", [])
-    statuses = set()
-
-    for condition in termination_conditions:
-        status = condition.get("status")
-        if status:
-            statuses.add(status)
-
-    return statuses
+    return {c.get("status") for c in termination_conditions if c.get("status")}
 
 
 def build_changed_files_artifact(file_operations: List[dict]) -> dict:
     files = []
-
     for op in file_operations:
         path = op.get("path")
         action = op.get("action")
@@ -49,33 +41,25 @@ def build_changed_files_artifact(file_operations: List[dict]) -> dict:
             continue
 
         path_obj = Path(path)
-
         content = None
+
         if path_obj.exists() and path_obj.is_file():
             try:
                 content = path_obj.read_text(encoding="utf-8")
-            except UnicodeDecodeError:
-                content = path_obj.read_text(encoding="utf-8", errors="replace")
             except Exception:
                 content = None
 
-        files.append(
-            {
-                "path": path,
-                "action": action,
-                "exists": path_obj.exists(),
-                "content": content,
-            }
-        )
+        files.append({
+            "path": path,
+            "action": action,
+            "exists": path_obj.exists(),
+            "content": content,
+        })
 
     return {"files": files}
 
 
-def run_workflow(
-    task: dict,
-    start_role_override: str = None,
-    max_steps_override: int = None,
-) -> None:
+def run_workflow(task: dict, start_role_override=None, max_steps_override=None):
     workflow_name = task.get("workflow", "feature_development")
     workflow = load_workflow(workflow_name)
 
@@ -87,11 +71,12 @@ def run_workflow(
 
     runs_dir = Path("runtime/runs")
     runs_dir.mkdir(parents=True, exist_ok=True)
-
     save_json(runs_dir / "current_task.json", task)
 
     current_role = start_role_override or start_role
     previous_output = None
+    previous_role = None
+
     transition_counts: Dict[Tuple[str, str], int] = {}
     max_steps = max_steps_override or MAX_WORKFLOW_STEPS
 
@@ -107,31 +92,28 @@ def run_workflow(
         )
 
         file_operations = result.get("file_operations", [])
-        execution_results = []
 
         if file_operations:
+            if current_role != "software_engineer":
+                raise ValueError("Only software_engineer can modify files")
+
             print(f"Applying {len(file_operations)} file operation(s)...")
-            if file_operations and current_role != "software_engineer":
-                raise ValueError(
-                    f"Role '{current_role}' is not allowed to execute file operations. "
-                    "Only software_engineer may apply repository changes."
-                )
+
             execution_results = apply_file_operations(file_operations)
             result["execution_results"] = execution_results
 
             artifact_bundle = build_changed_files_artifact(file_operations)
             artifact_path = runs_dir / f"step_{step:02d}_artifacts.json"
+
             save_json(artifact_path, artifact_bundle)
 
             result["artifact_bundle_file"] = str(artifact_path)
             result["artifact_bundle"] = artifact_bundle
 
             print(f"Artifacts saved: {artifact_path}")
-            print("File operations applied.")
 
         step_file = runs_dir / f"step_{step:02d}_{current_role}.json"
         save_json(step_file, result)
-        print(f"Saved step output: {step_file}")
 
         agent = result.get("agent")
         status = result.get("status")
@@ -140,11 +122,9 @@ def run_workflow(
         next_owner = handoff.get("next_owner")
 
         if agent != current_role:
-            raise ValueError(
-                f"Step {step} returned mismatched agent. "
-                f"Expected '{current_role}', got '{agent}'."
-            )
+            raise ValueError("Agent mismatch")
 
+        # ✅ TERMINATION (correct)
         if workflow_outcome == "completed" or status == "completed":
             print(f"\nWorkflow completed by {current_role}")
             return
@@ -158,43 +138,36 @@ def run_workflow(
             return
 
         if status == "requires revision":
-            print(
-                f"\nRevision requested by {current_role}. "
-                "Returning control to run_agent for bounded retry handling."
-            )
             return
 
         if status != "ready for next stage":
-            raise ValueError(
-                f"Unsupported status returned at step {step}: {status}"
-            )
+            raise ValueError(f"Invalid status: {status}")
 
         if not next_owner:
-            raise ValueError(
-                f"Step {step} ({current_role}) returned no handoff.next_owner"
-            )
+            raise ValueError("Missing next_owner")
 
         validate_role(next_owner, workflow_name, allowed_roles)
 
+        # 🔥 FIX: PM LOOP GUARD (THIS IS THE REAL FIX)
+        if current_role == "project_manager":
+            if previous_role == "software_engineer" and next_owner == "software_engineer":
+                print("\nFixing PM loop → redirecting to QA instead of engineer")
+                next_owner = "qa_analyst"
+                result["handoff"]["next_owner"] = "qa_analyst"
+
         if next_owner == current_role:
-            raise RuntimeError(
-                f"Invalid self-handoff at step {step}: "
-                f"'{current_role}' cannot hand off to itself while continuing."
-            )
+            raise RuntimeError("Self handoff detected")
 
         transition = (current_role, next_owner)
         transition_counts[transition] = transition_counts.get(transition, 0) + 1
 
         if transition_counts[transition] > MAX_TRANSITION_REPEATS:
             raise RuntimeError(
-                f"Detected repeated workflow transition {current_role} -> {next_owner}. "
-                f"This usually means the handoff chain is looping."
+                f"Detected repeated workflow transition {current_role} -> {next_owner}"
             )
 
         previous_output = result
+        previous_role = current_role
         current_role = next_owner
 
-    raise RuntimeError(
-        f"Workflow exceeded max step limit of {max_steps}. "
-        "This usually means no agent is declaring completion or the handoff chain is looping."
-    )
+    raise RuntimeError("Workflow exceeded max steps")
