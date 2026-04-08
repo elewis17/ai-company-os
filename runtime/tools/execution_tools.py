@@ -238,8 +238,10 @@ def _validate_operation_payload(op: Dict[str, Any]) -> None:
 
         match_count = existing_content.count(old_text)
         if match_count == 0:
+            preview = existing_content[:500]
             raise ValueError(
-                f"replace_in_file could not find the target text in '{path}'."
+                f"replace_in_file could not find the target text in '{path}'.\n"
+                f"--- FILE PREVIEW START ---\n{preview}\n--- FILE PREVIEW END ---"
             )
         if match_count > 1:
             raise ValueError(
