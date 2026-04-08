@@ -9,7 +9,7 @@ RUNS_DIR = BASE / "runtime/runs"
 
 sys.path.append(str(BASE))
 
-from scripts.run_agent import augment_task_with_memory, run_with_bounded_retry, select_workflow  # noqa: E402
+from scripts.run_agent import run_with_bounded_retry, select_workflow  # noqa: E402
 
 
 def _read_text(path: Path) -> str:
@@ -142,8 +142,6 @@ def main() -> None:
 
     if parsed.get("issue_number"):
         task["issue_number"] = parsed["issue_number"]
-
-    task = augment_task_with_memory(task)
 
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     (RUNS_DIR / "current_task.json").write_text(json.dumps(task, indent=2), encoding="utf-8")

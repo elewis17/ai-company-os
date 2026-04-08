@@ -210,14 +210,12 @@ def build_task_from_issue(title: str, body: str) -> dict:
 
     workflow_name = select_workflow(paths)
 
-    task = {
+    return {
         "issue_title": title,
         "issue_body": body,
         "workflow": workflow_name,
         "retrieved_files": paths,
     }
-
-    return augment_task_with_memory(task)
 
 
 def main() -> None:
