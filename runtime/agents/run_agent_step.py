@@ -6,6 +6,7 @@ from openai import OpenAI
 
 from runtime.agents.agent_loader import load_agent_instructions
 from runtime.config.roles import VALID_ROLES
+from runtime.tools.repo_tools import _resolve_repo_path
 
 client = OpenAI()
 
@@ -45,6 +46,12 @@ def _extract_changed_paths(previous_output: Optional[Dict[str, Any]]) -> List[st
         return []
 
     paths: List[str] = []
+
+    # A manager may be the immediate predecessor of QA. Preserve the exact
+    # implementation evidence carried by the engine through that handoff.
+    for item in previous_output.get("artifact_bundle", {}).get("files", []):
+        if isinstance(item.get("path"), str):
+            paths.append(item["path"])
 
     for op in previous_output.get("file_operations", []) or []:
         path = op.get("path")
@@ -116,8 +123,8 @@ def _build_changed_files_bundle(previous_output: Optional[Dict[str, Any]]) -> Di
 
     files: List[Dict[str, Any]] = []
     for path_str in changed_paths:
-        content = _read_text_file(path_str)
-        path_obj = Path(path_str)
+        path_obj = _resolve_repo_path(path_str)
+        content = _read_text_file(str(path_obj))
         files.append(
             {
                 "path": path_str,
@@ -152,7 +159,7 @@ def _build_context_mode(
         return {
             "mode": "review_bundle",
             "description": (
-                "Use exact changed files from the immediately prior step as the primary review source of truth."
+                "Use cumulative implemented files carried through handoffs as the primary review source of truth."
             ),
             "artifact_bundle_file": artifact_file,
             "artifact_bundle": bundle,

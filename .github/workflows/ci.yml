@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Workflow quality regression tests
+        env:
+          OPENAI_API_KEY: test-placeholder-no-network
+        run: |
+          pip install openai pyyaml
+          python -m unittest discover -s tests -v
       - uses: actions/setup-node@v4
         with:
           node-version: 20

@@ -6,6 +6,7 @@ from runtime.agents.run_agent_step import run_agent_step
 from runtime.config.roles import VALID_ROLES
 from runtime.engine.workflow_loader import load_workflow
 from runtime.tools.execution_tools import apply_file_operations
+from runtime.tools.repo_tools import _resolve_repo_path
 
 MAX_WORKFLOW_STEPS = 12
 MAX_TRANSITION_REPEATS = 2
@@ -40,7 +41,7 @@ def build_changed_files_artifact(file_operations: List[dict]) -> dict:
         if not path:
             continue
 
-        path_obj = Path(path)
+        path_obj = _resolve_repo_path(path)
         content = None
 
         if path_obj.exists() and path_obj.is_file():
@@ -76,11 +77,19 @@ def run_workflow(task: dict, start_role_override=None, max_steps_override=None):
     current_role = start_role_override or start_role
     previous_output = None
     previous_role = None
+    # Keep implementation evidence across planning handoffs, including retries.
+    changed_operations = {
+        item["path"]: item for item in task.get("changed_file_operations", [])
+    }
 
     transition_counts: Dict[Tuple[str, str], int] = {}
     max_steps = max_steps_override or MAX_WORKFLOW_STEPS
 
-    for step in range(1, max_steps + 1):
+    step_offset = max(
+        (int(p.name.split("_")[1]) for p in runs_dir.glob("step_*_*.json")),
+        default=0,
+    )
+    for step in range(step_offset + 1, step_offset + max_steps + 1):
         validate_role(current_role, workflow_name, allowed_roles)
 
         print(f"\nRunning step {step}: {current_role}")
@@ -102,7 +111,8 @@ def run_workflow(task: dict, start_role_override=None, max_steps_override=None):
             execution_results = apply_file_operations(file_operations)
             result["execution_results"] = execution_results
 
-            artifact_bundle = build_changed_files_artifact(file_operations)
+            changed_operations.update({op["path"]: op for op in file_operations})
+            artifact_bundle = build_changed_files_artifact(list(changed_operations.values()))
             artifact_path = runs_dir / f"step_{step:02d}_artifacts.json"
 
             save_json(artifact_path, artifact_bundle)
@@ -111,6 +121,10 @@ def run_workflow(task: dict, start_role_override=None, max_steps_override=None):
             result["artifact_bundle"] = artifact_bundle
 
             print(f"Artifacts saved: {artifact_path}")
+
+        if changed_operations:
+            result["artifact_bundle"] = build_changed_files_artifact(list(changed_operations.values()))
+            result["changed_file_operations"] = list(changed_operations.values())
 
         step_file = runs_dir / f"step_{step:02d}_{current_role}.json"
         save_json(step_file, result)
@@ -127,18 +141,18 @@ def run_workflow(task: dict, start_role_override=None, max_steps_override=None):
         # ✅ TERMINATION (correct)
         if workflow_outcome == "completed" or status == "completed":
             print(f"\nWorkflow completed by {current_role}")
-            return
+            return result
 
         if workflow_outcome == "blocked" or status == "blocked":
             print(f"\nWorkflow blocked at {current_role}")
-            return
+            return result
 
         if status in termination_statuses:
             print(f"\nWorkflow stopped with terminal status: {status}")
-            return
+            return result
 
         if status == "requires revision":
-            return
+            return result
 
         if status != "ready for next stage":
             raise ValueError(f"Invalid status: {status}")
