@@ -148,54 +148,32 @@ def _run_retry_slice(task: dict) -> None:
     )
 
 
-def run_with_bounded_retry(task: dict) -> None:
+def run_with_bounded_retry(task: dict) -> dict:
+    """Only a completed QA review is success; blocked/exhausted work fails CI."""
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
-
-    print(f"Selected workflow: {task['workflow']}")
-    print("Handing off to workflow engine...")
-
-    _run_initial_workflow(task)
-
+    result = run_workflow(task)
     retries_used = 0
-
-    while retries_used < MAX_AUTO_RETRIES:
-        qa_file = _get_latest_qa_file()
-        artifact_file = _get_latest_artifact_file()
-
-        qa_payload = _safe_load_json(qa_file) if qa_file else None
-        artifact_payload = _safe_load_json(artifact_file) if artifact_file else None
-
-        if _qa_status_terminal(qa_payload):
-            print("\nWorkflow reached terminal state. Stopping.")
-            return
-
-        if not _qa_status_requires_retry(qa_payload):
-            print("\nNo retry needed. Stopping.")
-            return
-
-        if not _artifact_has_changed_files(artifact_payload):
-            print("\nQA requested revision, but no changed-file artifact was found. Stopping.")
-            return
-
+    while result and result.get("status") == "requires revision" and retries_used < MAX_AUTO_RETRIES:
+        if not result.get("changed_file_operations"):
+            break
         retries_used += 1
-        print(f"\nAuto-retry triggered ({retries_used}/{MAX_AUTO_RETRIES})")
-        print("Re-running corrective slice: software_engineer -> qa_analyst")
+        retry_task = dict(task)
+        retry_task["changed_file_operations"] = result["changed_file_operations"]
+        retry_task["issue_body"] = task.get("issue_body", "") + "\nQA feedback:\n" + json.dumps(result)
+        result = run_workflow(retry_task, start_role_override="software_engineer", max_steps_override=2)
 
-        retry_task = _build_retry_task(task)
-        _run_retry_slice(retry_task)
-
-        qa_file = _get_latest_qa_file()
-        qa_payload = _safe_load_json(qa_file) if qa_file else None
-
-        if _qa_status_terminal(qa_payload):
-            print("\nWorkflow reached terminal state after retry. Stopping.")
-            return
-
-        if not _qa_status_requires_retry(qa_payload):
-            print("\nRetry completed. No further retry needed.")
-            return
-
-    print("\nMax auto-retries reached. Stopping.")
+    passed = bool(
+        result
+        and result.get("agent") == "qa_analyst"
+        and result.get("status") == "completed"
+        and result.get("workflow_outcome") == "completed"
+    )
+    summary = {"passed": passed, "retries_used": retries_used, "result": result}
+    (RUNS_DIR / "workflow_result.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    if not passed:
+        status = result.get("status", "missing") if result else "missing"
+        raise RuntimeError(f"QA did not approve this task (status: {status}). See workflow_result.json")
+    return summary
 
 
 def build_task_from_issue(title: str, body: str) -> dict:
