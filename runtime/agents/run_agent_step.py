@@ -649,6 +649,13 @@ Rules:
     - content must be final file content only
     - do not wrap content in JSON, prose, or meta-instructions
 
+Runner lifecycle for this execution:
+- Agents produce file operations and QA reviews; they do not create branches or PRs.
+- The enclosing GitHub Actions worker creates the branch and PR AFTER completed QA.
+- Do not hand off merely to create a branch/PR, and do not block QA because that downstream step has not happened yet.
+- QA must assess the implemented files and required verification evidence. If acceptable, return status='completed' and workflow_outcome='completed'.
+- If content or required tests are insufficient, return requires revision or blocked with concrete findings. Do not invent test results or bypass quality requirements.
+
 Return only schema-compliant JSON.
 """
 
