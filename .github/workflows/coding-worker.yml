@@ -1,29 +1,62 @@
-name: Coding Worker
-
+name: Alfred worker staging smoke test
 on:
-  issues:
-    types: [opened]
-
+  push:
+    branches: [alfred-worker-staging]
+permissions:
+  contents: read
+concurrency:
+  group: alfred-worker-staging
+  cancel-in-progress: true
 jobs:
-  run-agent:
+  smoke:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
         with:
-          python-version: "3.11"
-
-      - name: Install dependencies
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check Python syntax
+        run: python -m compileall -q runtime scripts
+      - name: Exercise workflow routing without external services
         run: |
-          pip install openai numpy
-
-      - name: Run coding agent
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          LEASE_LENS_REPO_ROOT: .
-        run: |
-          python scripts/run_agent.py "${{ github.event.issue.title }}" "${{ github.event.issue.body }}"
+          python - <<'PY'
+          import importlib
+          import sys
+          import tempfile
+          import os
+          from types import ModuleType
+          from unittest.mock import Mock
+          modules = {
+              "runtime.agents.run_agent_step": {"run_agent_step": Mock()},
+              "runtime.config.roles": {"VALID_ROLES": ["project_manager", "software_engineer", "qa_analyst"]},
+              "runtime.engine.workflow_loader": {"load_workflow": Mock(return_value={
+                  "start_role": "project_manager",
+                  "allowed_roles": ["project_manager", "software_engineer", "qa_analyst"],
+                  "termination_conditions": []
+              })},
+              "runtime.tools.execution_tools": {"apply_file_operations": Mock()},
+          }
+          for name, attrs in modules.items():
+              module = ModuleType(name)
+              module.__dict__.update(attrs)
+              sys.modules[name] = module
+          engine = importlib.import_module("runtime.engine.run_workflow")
+          engine.run_agent_step.side_effect = [
+              {"agent":"project_manager","status":"ready for next stage","handoff":{"next_owner":"software_engineer"}},
+              {"agent":"software_engineer","status":"ready for next stage","handoff":{"next_owner":"qa_analyst"}},
+              {"agent":"qa_analyst","status":"completed"}
+          ]
+          with tempfile.TemporaryDirectory() as directory:
+              original = os.getcwd()
+              try:
+                  os.chdir(directory)
+                  engine.run_workflow({"workflow":"feature_development"})
+                  assert engine.run_agent_step.call_count == 3
+                  assert os.path.exists("runtime/runs/step_03_qa_analyst.json")
+              finally:
+                  os.chdir(original)
+          print("PASS: simulated manager -> engineer -> QA handoff")
+          PY
